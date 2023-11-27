@@ -9,6 +9,7 @@ import pandas as pd
 import os
 import numpy as np
 import math
+from json import loads
 
 # Set working directory
 absolute_path = 'Dokumenter/GitHub/Data-visualization-project/data_cleaning'
@@ -238,4 +239,11 @@ for i in metadata[metadata['Camps'].isna() == False]['Camps2'].index:
             d[metadata['Camps2'][i][j]] = 1
             
 del d['female'] # remove wrong value from dictionary should look into this later
+
+
+
+# SAVE CLEANED DATA AS JSON FILE
+cwd = os.getcwd()
+save_path = cwd+'\\data\\clean_data1.json'
+metadata.to_json(orient='split',path_or_buf =  save_path)
 
