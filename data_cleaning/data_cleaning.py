@@ -144,8 +144,9 @@ l = metadata.loc[metadata['Camps'].str.contains('Franfurt') == True].index
 for i in l:
     metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Franfurt', 'Frankfurt')
     
-i = metadata.loc[metadata['Camps'].str.contains('Gunskircen') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Gunskircen', ' Gunskirchen')
+l = metadata.loc[metadata['Camps'].str.contains('Gunskircen') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Gunskircen', ' Gunskirchen')
 
 i = metadata.loc[metadata['Camps'].str.contains('Görlicz') == True].index
 metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Görlicz', ' Görlitz')
@@ -154,8 +155,9 @@ l = metadata.loc[metadata['Camps'].str.contains('Günskirchen') == True].index
 for i in l:
     metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Günskirchen', 'Gunskirchen')
 
-i = metadata.loc[metadata['Camps'].str.contains('Günskirhcen') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Günskirhcen', ' Gunskirchen')
+l = metadata.loc[metadata['Camps'].str.contains('Günskirhcen') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Günskirhcen', ' Gunskirchen')
 
 l = metadata.loc[metadata['Camps'].str.contains('Lipstadt') == True].index
 for i in l:
@@ -165,52 +167,65 @@ l = metadata.loc[metadata['Camps'].str.contains('Malchov') == True].index
 for i in l:
     metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Malchov', 'Malchow')
 
-i = metadata.loc[metadata['Camps'].str.contains('Mauthasusen') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Mauthasusen', ' Mauthausen')
+l = metadata.loc[metadata['Camps'].str.contains('Mauthasusen') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Mauthasusen', ' Mauthausen')
 
-i = metadata.loc[metadata['Camps'].str.contains('Mauthasuen') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Mauthasuen', ' Mauthausen')
+l = metadata.loc[metadata['Camps'].str.contains('Mauthasuen') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Mauthasuen', ' Mauthausen')
 
-i = metadata.loc[metadata['Camps'].str.contains('Ordruf') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Ordruf', ' Ohrdruf')
+l = metadata.loc[metadata['Camps'].str.contains('Ordruf') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Ordruf', ' Ohrdruf')
 
-i = metadata.loc[metadata['Camps'].str.contains('Ordsruf') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Ordsruf', ' Ohrdruf')
+l = metadata.loc[metadata['Camps'].str.contains('Ordsruf') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Ordsruf', ' Ohrdruf')
 
-i = metadata.loc[metadata['Camps'].str.contains('Orianenburg') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Orianenburg', ' Oranienburg')
+l = metadata.loc[metadata['Camps'].str.contains('Orianenburg') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Orianenburg', ' Oranienburg')
 
 l = metadata.loc[metadata['Camps'].str.contains('Rawensbrück') == True].index
 for i in l:
     metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Rawensbrück', 'Ravensbrück')
 
-i = metadata.loc[metadata['Camps'].str.contains('Reinchenbach') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Reinchenbach', ' Reichenbach')
+l = metadata.loc[metadata['Camps'].str.contains('Reinchenbach') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Reinchenbach', ' Reichenbach')
 
-i = metadata.loc[metadata['Camps'].str.contains('Sachsenhaus') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Sachsenhaus', ' Sachsenhausen')
+l = metadata.loc[metadata['Camps'].str.contains('Sachsenhaus') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Sachsenhaus', ' Sachsenhausen')
 
-i = metadata.loc[metadata['Camps'].str.contains('Saxenhausen') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Saxenhausen', ' Sachsenhausen')
+l = metadata.loc[metadata['Camps'].str.contains('Saxenhausen') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Saxenhausen', ' Sachsenhausen')
 
 
 # Salzwedel
-i = metadata.loc[metadata['Camps'].str.contains('Slaczwedel') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Slaczwedel', ' Salzwedel')
+l = metadata.loc[metadata['Camps'].str.contains('Slaczwedel') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Slaczwedel', ' Salzwedel')
 
-i = metadata.loc[metadata['Camps'].str.contains('Slazwedel') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Slazwedel', ' Salzwedel')
+l = metadata.loc[metadata['Camps'].str.contains('Slazwedel') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Slazwedel', ' Salzwedel')
 
-i = metadata.loc[metadata['Camps'].str.contains('Salzwedell') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Salzwedell', ' Salzwedel')
+l = metadata.loc[metadata['Camps'].str.contains('Salzwedell') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Salzwedell', ' Salzwedel')
 
-i = metadata.loc[metadata['Camps'].str.contains('Salzwedell Belsenberg') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Salzwedell Belsenberg', ' Salzwedel, Belsenberg')
+l = metadata.loc[metadata['Camps'].str.contains('Salzwedell Belsenberg') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Salzwedell Belsenberg', ' Salzwedel, Belsenberg')
 
 
 # Stutthof
-i = metadata.loc[metadata['Camps'].str.contains('Stuthof') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Stuthof', ' Stutthof')
+l = metadata.loc[metadata['Camps'].str.contains('Stuthof') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Stuthof', ' Stutthof')
 
 l = metadata.loc[metadata['Camps'].str.contains('Studhof') == True].index
 for i in l:
@@ -218,19 +233,38 @@ for i in l:
 
 
 # Theresienstadt
-i = metadata.loc[metadata['Camps'].str.contains('Thereienstadt') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Thereienstadt', ' Theresienstadt')
+l = metadata.loc[metadata['Camps'].str.contains('Thereienstadt') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Thereienstadt', ' Theresienstadt')
 
 l = metadata.loc[metadata['Camps'].str.contains('Studhof') == True].index
 for i in l:
     metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Studhof', 'Theresienstadt')
 
 
-# Auschwitz
+
+# Doing this a smarter way
+l1 = ['Sachsenhausenen', 'Salzwedel Belsenberg'] # Wrong names
+l2 = ['Sachsenhausen', 'Salzwedel, Belsenberg'] # Correct names
+
+for i in range(len(l1)):
+    l = metadata.loc[metadata['Camps'].str.contains(l1[i]) == True].index
+    for j in l:
+        metadata.loc[j,'Camps'] = metadata.loc[j,'Camps'].replace(l1[i], l2[i])
+
+ 
+
+
+
 
 
 # Create dictionary again
-d3 = {}
+spl = lambda x: x.split(', ') # make lambda function
+metadata['Camps2'] = metadata['Camps'].map(spl, na_action='ignore') # Use mapping
+l = list(range(len(metadata)))
+metadata.index = l # Correct indexes so no numbers are missing
+
+d = {}
 for i in metadata[metadata['Camps'].isna() == False]['Camps2'].index:
     for j in range(len(metadata['Camps2'][i])):
         if metadata['Camps2'][i][j] in d.keys():
@@ -238,8 +272,18 @@ for i in metadata[metadata['Camps'].isna() == False]['Camps2'].index:
         else:
             d[metadata['Camps2'][i][j]] = 1
             
-del d3['female'] # remove wrong value from dictionary should look into this later
+del d['female'] # remove wrong value from dictionary should look into this later
 
+
+
+# CLEAN TXT FILES
+path = cwd+'\\data\\text-en'
+l4 = os.listdir(path)
+
+for i in range(len(l4)):
+    s = path+l4[i]
+    open(s)
+    s.close()
 
 
 # SAVE CLEANED DATA AS JSON FILE
@@ -249,6 +293,6 @@ metadata.to_json(orient='split',path_or_buf =  save_path)
 
 # Save dict d
 with open('data/dict.json','w', encoding='UTF-8') as fp:
-    json.dump(d3, fp)
+    json.dump(d, fp)
     
 fp.close()
