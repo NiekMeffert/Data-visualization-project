@@ -276,14 +276,6 @@ del d['female'] # remove wrong value from dictionary should look into this later
 
 
 
-# CLEAN TXT FILES
-path = cwd+'\\data\\text-en'
-l4 = os.listdir(path)
-
-for i in range(len(l4)):
-    s = path+l4[i]
-    open(s)
-    s.close()
 
 
 # SAVE CLEANED DATA AS JSON FILE
