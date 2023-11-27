@@ -14,12 +14,11 @@ import math
 absolute_path = 'Dokumenter/GitHub/Data-visualization-project/data_cleaning'
 os.chdir(absolute_path)
 
-abs_path = "C:/Users/kagecomputer 2/Documents/GitHub/Data-visualization-project/data_cleaning"
 cwd = os.getcwd()
 print('Current Working Directory is: ', cwd)
 
 # Import data set using pandas
-metadata = pd.read_csv("testimonies.csv", sep="\t", na_values="unknown")
+metadata = pd.read_csv("data/testimonies.csv", sep="\t", na_values="unknown")
 
 # DATA WRANGLING AND INSPECTION
 metadata.value_counts()
