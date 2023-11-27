@@ -27,12 +27,17 @@ metadata.value_counts()
 print(metadata.loc[metadata['Name']== 'S. R.'])
 # I notice som duplicates so I drop them and check that it worked
 metadata = metadata.drop_duplicates()
-
+metadata.drop(metadata.loc[metadata['Place_of_birth'] == 'female'])
 print(metadata.value_counts())
 
 
 
 metadata.info()
+
+# Found row with all 'female' entries
+metadata.loc[metadata['Place_of_birth'] == 'female']
+metadata.drop(172) # remove said row
+
 
 # Inspecting the cleaning the gender column
 print(metadata['Gender'].unique())
@@ -146,10 +151,11 @@ for i in l:
     
 l = metadata.loc[metadata['Camps'].str.contains('Gunskircen') == True].index
 for i in l:
-    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Gunskircen', ' Gunskirchen')
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Gunskircen', 'Gunskirchen')
 
-i = metadata.loc[metadata['Camps'].str.contains('Görlicz') == True].index
-metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Görlicz', ' Görlitz')
+l = metadata.loc[metadata['Camps'].str.contains('Görlicz') == True].index
+for i in l:
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Görlicz', ' Görlitz')
 
 l = metadata.loc[metadata['Camps'].str.contains('Günskirchen') == True].index
 for i in l:
@@ -157,7 +163,7 @@ for i in l:
 
 l = metadata.loc[metadata['Camps'].str.contains('Günskirhcen') == True].index
 for i in l:
-    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Günskirhcen', ' Gunskirchen')
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Günskirhcen', 'Gunskirchen')
 
 l = metadata.loc[metadata['Camps'].str.contains('Lipstadt') == True].index
 for i in l:
@@ -235,17 +241,17 @@ for i in l:
 # Theresienstadt
 l = metadata.loc[metadata['Camps'].str.contains('Thereienstadt') == True].index
 for i in l:
-    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Thereienstadt', ' Theresienstadt')
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Theresienstedt', ' Theresienstadt')
 
 l = metadata.loc[metadata['Camps'].str.contains('Studhof') == True].index
 for i in l:
-    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Studhof', 'Theresienstadt')
+    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Theresiestadt', 'Theresienstadt')
 
 
 
 # Doing this a smarter way
-l1 = ['Sachsenhausenen', 'Salzwedel Belsenberg'] # Wrong names
-l2 = ['Sachsenhausen', 'Salzwedel, Belsenberg'] # Correct names
+l1 = ['Sachsenhausenen', 'Salzwedel Belsenberg', 'Auschwitz - Birkenau', 'Auschwitz - Marklinberg', 'Auschwitz - Torgau','Brauschweig', 'Bushenwald', 'Fallerslebel', 'Fallensleben', 'Fallesleben', 'Farsleben', 'Gelsehkirchen','Grosrosen', 'Görlicz','Kaufernig','Markkleberg','Mathausen','Mihldorf','Mosowitz','Mühldorf Waldlager','Münldorf','Neugam','Neugame','Neugamen','Neugami','Neungamen','Parschwitz'] # Wrong names
+l2 = ['Sachsenhausen', 'Salzwedel, Belsenberg', 'Auschwitz', 'Auschwitz', 'Auschwitz', 'Braunschweig', 'Buchenwald', 'Fallersleben', 'Fallersleben', 'Fallersleben', 'Fallersleben', 'Gelsenkirchen','Grossrosen', 'Görlitz', 'Kaufering','Markleberg','Mauthausen','Mildorf','Monowitz','Mühldorf','Mühldorf','Neuengamme','Neuengamme','Neuengamme','Neuengamme','Neuengamme','Parschnitz'] # Correct names
 
 for i in range(len(l1)):
     l = metadata.loc[metadata['Camps'].str.contains(l1[i]) == True].index
@@ -275,6 +281,42 @@ for i in metadata[metadata['Camps'].isna() == False]['Camps2'].index:
 del d['female'] # remove wrong value from dictionary should look into this later
 
 
+
+
+# Place of birth
+c = metadata['Place_of_birth'].count
+
+metadata.loc[metadata['Place_of_birth'] == 'Alsóapsó','Place_of_birth'] = 'Alsóapsa'
+
+l1 = ['Alsóapsó','Badalo', 'Gyor','Técs?', 'Érsekujvár', 'Perecsény', 'Budapesten', 'Budapst', 'Budafok'] # Wrong names
+l2 = ['Alsóapsa','Badaló', 'Györ','Técso', 'Érsekújvár', 'Perecseny', 'Budapest', 'Budapest', 'Budapest'] # Correct names
+for i in range(len(l1)):
+     metadata.loc[metadata['Place_of_birth'] == l1[i],'Place_of_birth'] = l2[i]
+
+d_birth = {}
+for i in range(len(metadata)):
+    if metadata.loc[i,'Place_of_birth'] in d_birth.keys():
+        d_birth[metadata.loc[i,'Place_of_birth']] += 1
+    else:
+        d_birth[metadata.loc[i,'Place_of_birth']] = 1
+del d_birth['female']
+
+
+# Place of residence
+for i in range(len(l1)): # Reuse lists from birth place
+     metadata.loc[metadata['Place_of_residence'] == l1[i],'Place_of_residence'] = l2[i]
+
+
+# make new lists
+l1 = ['Keselymez?'] # Wrong names
+l2 = ['Keselymezo'] # Correct names
+
+d_residence = {}
+for i in range(len(metadata)):
+    if metadata.loc[i,'Place_of_residence'] in d_residence.keys():
+        d_residence[metadata.loc[i,'Place_of_residence']] += 1
+    else:
+        d_residence[metadata.loc[i,'Place_of_residence']] = 1
 
 
 
