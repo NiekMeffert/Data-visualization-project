@@ -11,9 +11,10 @@ import numpy as np
 import math
 
 # Set working directory
-absolute_path = 'C:/Users/kagecomputer 2/OneDrive - Syddansk Universitet (1)/Data Science/Visualisering'
+absolute_path = 'Dokumenter/GitHub/Data-visualization-project/data_cleaning'
 os.chdir(absolute_path)
 
+abs_path = "C:/Users/kagecomputer 2/Documents/GitHub/Data-visualization-project/data_cleaning"
 cwd = os.getcwd()
 print('Current Working Directory is: ', cwd)
 
