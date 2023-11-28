@@ -50,15 +50,6 @@ for i in range(len(l)):
     t.write(text) # Write text into file
     t.close() 
 
-    
-    text = text.replace('The person in question has given us the following information:','') # Remove sentence from text
-    text = text.replace('\n','')
-    s = path++l[i]
-    t = open(s, 'w', encoding='UTF-8') # Open file again for writing (overwrites original file)
-    t.write(text) # Write text into file
-    t.close() 
-
-
 
 
 
