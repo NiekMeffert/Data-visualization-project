@@ -17,12 +17,25 @@
     .await(ready)
 
 
+    var projection = d3.geoMercator()
+    .translate ([ width / 2, height / 2])
+
+
+    var path = d3.geoPath()
+    .projection(projection)
+
     function ready (error, data) {
         console.log(data)
 
         var countries = topojson.feature(data, data.objects.countries).features
 
         console.log(countries)
+
+        svg.selectAll(".country")
+        .data(countries)
+        .enter() .append("path")
+        .attr("class" , "country")
+        .attr("d" , path)
 
 
     }
