@@ -13,45 +13,23 @@
                 background: #854444;
             }
         </style>
-
+        <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+        <script src="https://d3js.org/d3.v4.js"></script>
     </head>
     <body>
         <h1>Hungarian testimonies</h1>
         <p id = 'text'></p>
-
-        <script> 
-        const para = document.getElementById('text')
-        fetch('text-en_clean/4.txt')
-            .then(response => response.text())
-            .then(text => para.textContent += text)
-        </script>
-
-
-        <script>
+        <div id="wordcloud"></div> 
+        <p id="wf"></p>
+        <div id="my_dataviz"></div>
 
 
 
+        <!-- Import scripts that cannot run before the page is loaded -->
+        <script src="word_frequecies.js"></script>
+        <script src="text_to_p.js"></script>
+        <script src="word_cloud.js"></script>
 
-function wordFreq(string) {
-    var words = string.replace(/[.]/g, '').split(/\s/);
-    var freqMap = {};
-    words.forEach(function(w) {
-        if (!freqMap[w]) {
-            freqMap[w] = 0;
-        }
-        freqMap[w] += 1;
-    });
-
-    return freqMap;
-} 
-
-console.log(wordFreq("I am the big the big bull."));
-
-var freq = wordFreq("I am the big the big bull.");
-Object.keys(freq).sort().forEach(function(word) {
-    console.log("count of " + word + " is " + freq[word]);
-});
-        </script>
-        <div id="wordcloud"></div>
+        
     </body>
 </html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <style>
+        .container{
+            border: 1px solid red;
+        }
+        .bar{
+            fill: #720570;
+        }
+    </style>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/d3-scale.v3.min.js"></script>
+</head>
+
+<body>
+  <svg></svg>
+  <div></div>
+  <script>
+    const DUMMU_data = [
+        { id: 'd1', value: 10, region: 'USA'},
+        { id: 'd2', value: 5, region: 'India'},
+        { id: 'd3', value: 12, region: 'China'},
+        { id: 'd4', value: 7, region: 'Germany'},
+        { id: 'd5', value: 14, region: 'Denmark'}
+    ];
+
+    const xScale = d3
+        .scaleBand()
+        .domain(DUMMU_data.map((dataPoint) => dataPoint.region ))
+        .rangeRound([0, 250])
+        .padding(0.1);
+    const yScale = d3
+        .scaleLinear()
+        .domain([0, 15])
+        .range([200, 0]);
+
+    const container = d3.select('svg').classed('container', true);
+        //.style('border', '1px solid red');
+
+    const bars = container
+        .selectAll('.bar')
+        .data(DUMMU_data)
+        .enter()
+        .append('rect')
+        .classed('bar', true)
+        .attr('width', xScale.bandwidth())
+        .attr('height', (data) => 200 - yScale(data.value))
+        .attr('x', data => xScale(data.region))
+        .attr('y', data => yScale(data.value)); 
+    
+    d3.select('div')
+        .selectAll('p')
+        .data(DUMMU_data)
+        .enter()
+        .append('p')
+        .text(dta => dta.region); 
+  </script>
+</body>
+</html>
