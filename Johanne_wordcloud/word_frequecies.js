@@ -24,6 +24,5 @@ const freq = document.getElementById('wf');
 fetch('text-en_clean/4.txt')
     .then(response => response.text())
     .then(text => {
-        console.log(wordFreq(text));
         freq.textContent += JSON.stringify(wordFreq(text)); // json.stringify
             }); 
