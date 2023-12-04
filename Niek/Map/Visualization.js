@@ -1,7 +1,7 @@
 (function() {
     var margin = { top:50, left:50, right:50, bottom:50},
-    height = 700 - margin.top - margin.bottom,
-    width = 1400 - margin.left - margin.right;
+    height = 1000 - margin.top - margin.bottom,
+    width = 2000 - margin.left - margin.right;
 
     var svg = d3.select("#map")
     .append("svg")
@@ -14,14 +14,14 @@
 
     d3.queue()
     .defer(d3.json, "world.topojson")
-    .defer(d3.csv, "worldcities.csv")
+    .defer(d3.csv, "capitalCities.csv")
     .await(ready)
 
     //Handles which projection format the map should be in.
 
     var projection = d3.geoMercator()
-    .translate ([ width / 2, height / 2])
-    .scale(120)
+    .translate ([ width / 2, height / 1])
+    .scale(500)
 
 
     var path = d3.geoPath()
@@ -64,13 +64,13 @@
         .attr("r" , 2)
         .attr("cx" , function(d)
         {
-            var coords = projection ([d.lng, d.lat])
+            var coords = projection ([d.capital_lng, d.capital_lat])
             return coords[0];
         })
 
         .attr("cy" , function(d)
         {
-            var coords = projection ([d.lng, d.lat])
+            var coords = projection ([d.capital_lng, d.capital_lat])
             return coords[1];
         })
 
@@ -82,13 +82,13 @@
         .attr("class" , "city-label")
         .attr("x" , function(d)
         {
-            var coords = projection ([d.long, d.lat])
+            var coords = projection ([d.capital_lng, d.capital_lat])
             return coords[0];
         })
 
         .attr("y" , function(d)
         {
-            var coords = projection ([d.long, d.lat])
+            var coords = projection ([d.capital_lng, d.capital_lat])
             return coords[1];
         })
         .text (function(d)
