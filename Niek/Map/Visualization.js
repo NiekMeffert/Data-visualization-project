@@ -10,13 +10,14 @@
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
+    //Handles which datasets to use to depict info on the screen
 
     d3.queue()
     .defer(d3.json, "world.topojson")
-    .defer(d3.csv, "capitals.csv")
+    .defer(d3.csv, "worldcities.csv")
     .await(ready)
 
+    //Handles which projection format the map should be in.
 
     var projection = d3.geoMercator()
     .translate ([ width / 2, height / 2])
@@ -34,11 +35,14 @@
 
         console.log(countries)
 
+        //Handles visual creation of the map via the json file.
+
         svg.selectAll(".country")
         .data(countries)
         .enter() .append("path")
         .attr("class" , "country")
         .attr("d" , path)
+        
 
 
         .on('mouseover' , function(d) 
@@ -50,7 +54,9 @@
         {
             d3.select(this).classed("selected" , false)
         })
-        
+
+
+        //Handles the CSV data for the countries and shows it as circles on the map
 
         svg.selectAll(".city-circle")
         .data(capitals)
@@ -58,15 +64,17 @@
         .attr("r" , 2)
         .attr("cx" , function(d)
         {
-            var coords = projection ([d.long, d.lat])
+            var coords = projection ([d.lng, d.lat])
             return coords[0];
         })
 
         .attr("cy" , function(d)
         {
-            var coords = projection ([d.long, d.lat])
+            var coords = projection ([d.lng, d.lat])
             return coords[1];
         })
+
+        //Handles the CSV data for the country names and shows it as text on the map
 
         svg.selectAll(".city-label")
         .data(capitals)
@@ -93,5 +101,21 @@
 
 
     }
+
+    //Adds zoom functionality to map
+    const zoomElement = document.querySelector(".map");
+    let zoom = 1;
+
+    document.addEventListener("wheel", function (e)
+    {
+        if (e.deltaY > 0)
+        {
+            zoomElement.computedStyleMap.transform = `scale(${(zoom += 0.1)})`;
+        }
+        else
+        {
+            zoomElement.computedStyleMap.transform = `scale(${(zoom -= 0.1)})`;
+        }
+    });
     
 })();
