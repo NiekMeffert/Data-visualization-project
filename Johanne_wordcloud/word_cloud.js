@@ -1,17 +1,17 @@
 // List of words
 
-let myWords = [];
+//let myWords = [];
 let txt = '';
 
-function wordFreq(string) {
-    const words = string
+function wordFreq(words) {
+    /*const words = string
         .toLowerCase()
         .replace(/[.]/g, ' ') // Choose to add a whitespace to make sure we are not putting words together. This might split some numbers
         .replace(/,/g, '')
         .replace(/:/g, '')
         .replace(/;/g, '')
         //.replace(/"/g, '')
-        .split(/\s/);
+        .split(/\s/); */
 
     const freqMap = {};
     words.forEach(function (w) {
@@ -30,7 +30,7 @@ async function fetchData() {
     const text = await response.text();
 
     txt += text;
-    myWords = txt.toLowerCase()
+    const myWords = txt.toLowerCase()
         .replace(/[.]/g, ' ')
         .replace(/,/g, '')
         .replace(/:/g, '')
@@ -38,6 +38,20 @@ async function fetchData() {
         .split(/\s/);
     
     var freqmap = wordFreq(myWords);
+
+
+    // filter frequencies and make JSON object
+    const freqmapFiltered = {};
+    Object.keys(freqmap).forEach(function (word) {
+      // We don't want the string "", nor any numbers in the word cloud.
+      if (word === "" || /^[0-9]+$/.test(word)) {
+        console.log('Removing', word);
+        return;
+      }
+      if (freqmap[word] > 2) {
+        freqmapFiltered[word] = freqmap[word];
+      } // choose what frequencies to cut
+    });
 
     // MAKE WORD CLOUD
     // set the dimensions and margins of the graph
@@ -55,9 +69,9 @@ async function fetchData() {
     // Constructs a new cloud layout instance
     var layout = d3.layout.cloud()
         .size([width, height])
-        .words(freqmap.map(function (d) { return { text: d }; }))
+        .words(Object.keys(freqmapFiltered).map(function (word) { return { text: word }; }))
         .padding(10)
-        .fontSize(60)
+        .fontSize(function (d) { return 2 * freqmapFiltered[d.text]; })
         .on("end", draw);
 
     layout.start();
