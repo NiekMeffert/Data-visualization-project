@@ -12,8 +12,8 @@ import math
 import json
 
 # Set working directory
-absolute_path = 'Dokumenter/GitHub/Data-visualization-project/data_cleaning'
-os.chdir(absolute_path)
+#absolute_path = 'Dokumenter/GitHub/Data-visualization-project/data_cleaning'
+#os.chdir(absolute_path)
 
 cwd = os.getcwd()
 print('Current Working Directory is: ', cwd)
@@ -27,7 +27,7 @@ metadata.value_counts()
 print(metadata.loc[metadata['Name']== 'S. R.'])
 # I notice som duplicates so I drop them and check that it worked
 metadata = metadata.drop_duplicates()
-metadata.drop(metadata.loc[metadata['Place_of_birth'] == 'female'])
+#metadata.drop(metadata.loc[metadata['Place_of_birth'] == 'female'])
 print(metadata.value_counts())
 
 
