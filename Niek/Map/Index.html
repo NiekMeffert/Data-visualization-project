@@ -13,10 +13,11 @@
             {
                 font-size: 0.85em;
             }
-
+ 
             svg 
             {
                 background: #efefef;
+                position: absolute;
             }
 
             .country
@@ -36,6 +37,20 @@
                font-weight: bold;
                
             }
+
+            .city-circle
+            {
+                fill: #272626;
+            }
+
+            .filter-buttons 
+            {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+            }
+
+          
         </style>
 
     </head>
@@ -49,10 +64,27 @@
         <script src ="https://d3js.org/topojson.v1.min.js"></script>
 
         <script src="Visualization.js"></script>
+
         
-        <div id="container"></div>
-    <script>
-      // The place for the JavaScript bubble mapping code.
-    </script>
+    
+          <!-- Filter buttons -->
+  <div class="filter-buttons">
+    <button onclick="toggleFilter('city-circle')">Toggle Circles</button>
+   <!-- <button onclick="toggleFilter('Circles')">Toggle Rectangles</button> -->
+  </div>
+
+         <script>
+         function toggleFilter(elementType) 
+         {
+              var elements = document.getElementsByClassName(elementType);
+
+             for (var i = 0; i < elements.length; i++) 
+             {
+              var element = elements[i];
+              element.style.display = (element.style.display === "none" || element.style.display === "") ? "block" : "none";
+             }
+         }
+         </script>
+
     </body>
 </html>

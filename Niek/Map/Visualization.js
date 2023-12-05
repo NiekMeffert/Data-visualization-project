@@ -1,5 +1,5 @@
 (function() {
-    var margin = { top:50, left:50, right:50, bottom:50},
+    var margin = { top:100, left:100, right:100, bottom:100},
     height = 1000 - margin.top - margin.bottom,
     width = 2000 - margin.left - margin.right;
 
@@ -45,6 +45,28 @@
         
 
 
+       
+
+
+        //Handles the CSV data for the countries and shows it as circles on the map
+
+        svg.selectAll(".city-circle")
+        .data(capitals)
+        .enter().append("circle")
+        .attr("r" , 4)
+        .attr("class" , "city-circle")
+        .attr("cx" , function(d)
+        {
+            var coords = projection ([d.capital_lng, d.capital_lat])
+            return coords[0];
+        })
+
+        .attr("cy" , function(d)
+        {
+            var coords = projection ([d.capital_lng, d.capital_lat])
+            return coords[1];
+        })
+
         .on('mouseover' , function(d) 
         {
             d3.select(this).classed("selected" , true)
@@ -55,22 +77,22 @@
             d3.select(this).classed("selected" , false)
         })
 
-
-        //Handles the CSV data for the countries and shows it as circles on the map
+     // test for more formats at ones
 
         svg.selectAll(".city-circle")
         .data(capitals)
         .enter().append("circle")
-        .attr("r" , 2)
+        .attr("r" , 4)
+        .attr("class" , "city-circle")
         .attr("cx" , function(d)
         {
-            var coords = projection ([d.capital_lng, d.capital_lat])
+            var coords = projection ([d.lang, d.lat])
             return coords[0];
         })
 
         .attr("cy" , function(d)
         {
-            var coords = projection ([d.capital_lng, d.capital_lat])
+            var coords = projection ([d.lang, d.lat])
             return coords[1];
         })
 
@@ -102,20 +124,17 @@
 
     }
 
-    //Adds zoom functionality to map
-    const zoomElement = document.querySelector(".map");
-    let zoom = 1;
+    var zoom = d3.zoom()
+    .scaleExtent([1, 8])
+    .on("zoom", zoomed);
 
-    document.addEventListener("wheel", function (e)
-    {
-        if (e.deltaY > 0)
-        {
-            zoomElement.computedStyleMap.transform = `scale(${(zoom += 0.1)})`;
-        }
-        else
-        {
-            zoomElement.computedStyleMap.transform = `scale(${(zoom -= 0.1)})`;
-        }
-    });
+  svg.call(zoom);
+
+  function zoomed() {
+    svg.selectAll("path,circle")
+      .attr("transform", d3.event.transform);
+    };
+
     
+
 })();
