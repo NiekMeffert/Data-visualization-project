@@ -287,6 +287,20 @@ for i in range(len(l1)):
         metadata.loc[j,'Camps'] = metadata.loc[j,'Camps'].replace(l1[i], l2[i])
         
 
+# wrong names
+l1 = ['Theresienstedt','Theresiestadt', 'Thereienstadt', 'Therisienstadt']
+
+# correct names
+l2 = ['Theresienstadt', 'Theresienstadt', 'Theresienstadt', 'Theresienstadt']
+
+for i in range(len(l1)):
+    l = metadata.loc[metadata['Camps'].str.contains(l1[i]) == True].index
+    print(l1[i],',',l2[i])
+    for j in l:
+        metadata.loc[j,'Camps'] = metadata.loc[j,'Camps'].replace(l1[i], l2[i])
+
+
+
 # Create dictionary again
 spl = lambda x: x.split(', ') # make lambda function
 metadata['Camps2'] = metadata['Camps'].map(spl, na_action='ignore') # Use mapping
@@ -375,11 +389,11 @@ for i in range(len(residences)):
     if residences[i] not in places:
         places.append(residences[i])
 print(len(places))
-print(len(d))
-for key, value in d.items():
-    if key not in places:
-        places.append(key)
-print(len(places))
+#print(len(d))
+#for key, value in d.items():
+#    if key not in places:
+#        places.append(key)
+#print(len(places))
 
 
 # Geocode place names
@@ -491,6 +505,6 @@ with open('data/dict.json','w', encoding='UTF-8') as fp:
     
 fp.close()
 
-with open('data/residence_short3.json','w', encoding='UTF-8') as fp:
+with open('data/geo_no_camps.json','w', encoding='UTF-8') as fp:
     json.dump(geo,fp)
 fp.close()

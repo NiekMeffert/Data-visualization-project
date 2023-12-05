@@ -42,7 +42,6 @@ async function fetchData() {
 
     // filter frequencies and make JSON object
     const freqmapFiltered = {};
-    console.log(freqmap)
     Object.keys(freqmap).forEach(function (word) {
       // We don't want the string "", nor any numbers in the word cloud.
       if (word === "" || /^[0-9]+$/.test(word)) {
@@ -53,7 +52,6 @@ async function fetchData() {
         freqmapFiltered[word] = freqmap[word];
       } // choose what frequencies to cut
     });
-    console.log(freqmap)
     // MAKE WORD CLOUD
     // set the dimensions and margins of the graph
     var margin = { top: 10, right: 10, bottom: 10, left: 10 },
@@ -94,9 +92,8 @@ async function fetchData() {
 }
 };
 fetchData();
+
 /*
-
-
 // List of words
 var myWords = [{word: "Running", size: "100"}, {word: "Surfing", size: "200"}, {word: "Climbing", size: "50"}, {word: "Kiting", size: "30"}, {word: "Sailing", size: "20"}, {word: "Snowboarding", size: "60"} ]
 
