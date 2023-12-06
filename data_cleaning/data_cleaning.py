@@ -17,7 +17,7 @@ from geopy.geocoders import Bing
 
 # Set working directory
 absolute_path = 'Dokumenter/GitHub/Data-visualization-project/data_cleaning'
-os.chdir(absolute_path)
+#os.chdir(absolute_path)
 
 cwd = os.getcwd()
 print('Current Working Directory is: ', cwd)
