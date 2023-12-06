@@ -1,80 +1,102 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <style>
-            *
-            {
-                font-family: "Helvetica Neue";
-            }
+<head>
+    <meta charset="utf-8">
+    <style>
+        *
+        {
+            font-family: "Helvetica Neue";
+        }
 
-            p
+        p
+        {
+            font-size: 0.85em;
+        }
 
-            {
-                font-size: 0.85em;
-            }
- 
-            svg 
-            {
-                background: #efefef;
-                position: absolute;
-            }
+        svg 
+        {
+            background: #6f8484;
+            position: absolute;
+        }
 
-            .country
-            {
-                fill: #747474;
-                stroke: #cfcfcf;
-                stroke-width: 0.5;
-            }
-            .selected
-            {
-                fill: #cacaca;
-            }
+        .country
+        {
+            fill: #5c5858;
+            stroke: #c2bbbb;
+            stroke-width: 0.5;
+        }
 
-            .city-label
-            {
-               font-size: 2px; 
-               font-weight: bold;
-               
-            }
+        .selected
+        {
+            fill: #cacaca;
+        }
 
-            .city-circle
-            {
-                fill: #272626;
-            }
+        .city-label
+        {
+            font-size: 2px; 
+            font-weight: bold;
+        }
 
-            .filter-buttons 
-            {
-                position: absolute;
-                top: 10px;
-                left: 10px;
-            }
+        .city-circle
+        {
+            fill: #272626;
+        }
 
-            .tooltip 
-            {
-                font-size: 30px; 
-               font-weight: bold;
-            }
+        .filter-buttons 
+        {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
 
-          
-        </style>
+        .tooltip 
+        {
+            font-size: 30px; 
+            font-weight: bold;
+        }
 
-    </head>
-    <body>
-        
-<div id="map"></div>
-        
+        /* Style for the list on the right */
+        #residents-list 
+        {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 200px; /* Adjust the width as needed */
+            background-color: #f0f0f0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+        #residents-list ul 
+        {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-        <script src ="https://d3js.org/topojson.v1.min.js"></script>
+        #residents-list li 
+        {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
 
-        <script src="Visualization.js"></script>
-
-        
+    <button id="toggleButton">Toggle Bubbles</button>
     
-          <!-- Filter buttons -->
-  
+    <div id="map"></div>
 
-    </body>
+    <!-- List on the right -->
+    <div id="residents-list">
+        <h2>Residents List</h2>
+        <ul></ul>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="Visualization.js"></script>
+
+</body>
 </html>
