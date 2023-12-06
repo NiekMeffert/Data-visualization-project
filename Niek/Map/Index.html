@@ -33,7 +33,7 @@
 
             .city-label
             {
-               font-size: 14px; 
+               font-size: 2px; 
                font-weight: bold;
                
             }
@@ -48,6 +48,12 @@
                 position: absolute;
                 top: 10px;
                 left: 10px;
+            }
+
+            .tooltip 
+            {
+                font-size: 30px; 
+               font-weight: bold;
             }
 
           
@@ -68,23 +74,7 @@
         
     
           <!-- Filter buttons -->
-  <div class="filter-buttons">
-    <button onclick="toggleFilter('city-circle')">Toggle Circles</button>
-   <!-- <button onclick="toggleFilter('Circles')">Toggle Rectangles</button> -->
-  </div>
-
-         <script>
-         function toggleFilter(elementType) 
-         {
-              var elements = document.getElementsByClassName(elementType);
-
-             for (var i = 0; i < elements.length; i++) 
-             {
-              var element = elements[i];
-              element.style.display = (element.style.display === "none" || element.style.display === "") ? "block" : "none";
-             }
-         }
-         </script>
+  
 
     </body>
 </html>
