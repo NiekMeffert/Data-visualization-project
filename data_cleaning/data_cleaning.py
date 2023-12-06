@@ -359,6 +359,8 @@ for i in range(len(metadata)):
         d_residence[metadata.loc[i,'Place_of_residence']] = 1
 
 
+
+
 # FIND GEOLOCATIONS
 # Load API key from Google Maps API
 with open('api_key.txt') as f:
@@ -395,7 +397,7 @@ print(len(places))
 #        places.append(key)
 #print(len(places))
 
-
+'''
 # Geocode place names
 '''
 geo_dict = {}
@@ -477,10 +479,10 @@ for key, value in birth_geo_dict.items():
       }
      ] 
  }
-'''
+
 geo = {'type': 'FeatureCollection',
        "features":[]}
-
+'''
 for key, value in geo_dict.items():
     if key == 'nan':
         pass
@@ -492,7 +494,7 @@ for key, value in geo_dict.items():
             },
         'properties': {'Place_name':key}})
 
-
+'''
 
 # SAVE CLEANED DATA AS JSON FILE
 cwd = os.getcwd()
@@ -500,11 +502,21 @@ save_path = cwd+'\\data\\clean_data2.json'
 metadata.to_json(orient='split',path_or_buf =  save_path)
 
 # Save dict d
-with open('data/dict.json','w', encoding='UTF-8') as fp:
-    json.dump(d, fp)
-    
+with open('data/camp_count.json','w', encoding='UTF-8') as fp:
+    json.dump(d, fp)   
 fp.close()
 
+with open('data/birth_count.json','w', encoding='UTF-8') as fp:
+    json.dump(d_birth, fp)   
+fp.close()
+
+with open('data/residence_count.json','w', encoding='UTF-8') as fp:
+    json.dump(d_residence, fp)   
+fp.close()
+
+
+
+# Save geoJSON
 with open('data/geo_no_camps.json','w', encoding='UTF-8') as fp:
     json.dump(geo,fp)
 fp.close()
