@@ -17,7 +17,7 @@ function wordFreq(string) {
     });
 
     return freqMap;
-}
+};
 
 
 const freq = document.getElementById('wf');
