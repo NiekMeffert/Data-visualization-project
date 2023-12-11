@@ -17,6 +17,7 @@
         .defer(d3.json, "world.topojson")
         .defer(d3.csv, "geo_no_camps.csv")
         .defer(d3.json, "birth_count.json") // Add JSON file with entity counts
+        .defer(d3.csv, "SS_Camps_Definitive.csv") // Add the new CSV file
         .await(ready);
 
     // Handles which projection format the map should be in.
@@ -32,7 +33,7 @@
             return Math.sqrt(d.entityCount) * 0.5 + 2; // Add a small buffer
         }));
 
-    function ready(error, data, entities, entityCounts) {
+    function ready(error, data, entities, entityCounts, newEntities) {
         console.log(data);
 
         var countries = topojson.feature(data, data.objects.countries).features;
@@ -91,16 +92,79 @@
                 showResidentsList(d);
             });
 
-        simulation.nodes(groupedEntities)
-            .on("tick", function() {
-                bubbles.attr("cx", function(d) {
-                        return projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat])[0];
-                    })
-                    .attr("cy", function(d) {
-                        return projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat])[1];
-                    });
+        // Group new entities by city name
+        var groupedNewEntities = d3.nest()
+            .key(function(d) { return d.SUBCAMP; }) // Assuming SUBCAMP is the key for the new entities
+            .entries(newEntities);
+
+        // Add new entity counts to the groupedNewEntities
+        groupedNewEntities.forEach(function(city) {
+            var count = d3.sum(city.values, function(d) { return +d.PEAK_POP; }) || 0;
+            city.entityCount = count;
+        });
+
+        // Handles the new CSV data for the Concentration camps and shows them as additional rectangles
+        var newBubbles = svg.selectAll(".new-city-bubble")
+            .data(groupedNewEntities)
+            .enter().append("rect")
+            .attr("width", function(d) {
+                // Adjust the width based on the entity count in each city
+                return Math.sqrt(d.entityCount) * 0.02 * 2; // Multiply by 2 to get a proportional width
+            })
+            .attr("height", function(d) {
+                // Adjust the height based on the entity count in each city
+                return Math.sqrt(d.entityCount) * 0.02 * 2; // Multiply by 2 to get a proportional height
+            })
+            .attr("class", "new-city-bubble")
+            .style("fill-opacity", 0.6) // Set the fill-opacity to 0.6 for semi-transparency
+            .style("fill", "#69b3a2") // Set a different color for new entities
+            .on('mouseover', function(d) {
+                d3.select(this).classed("selected", true);
+
+                // Show city name and entity count when hovering over the rectangle
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(d.key + "<br/>Residents: " + d.entityCount)
+                    .style("left", (d3.event.pageX + 10) + "px") // Adjust left position
+                    .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on('mouseout', function(d) {
+                d3.select(this).classed("selected", false);
+
+                // Hide tooltip when moving out of the rectangle
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            })
+            .on('click', function(d) {
+                // Show residents list on click
+                showResidentsList(d);
             });
 
+        // Is meant to cluster the bubbles together when zoomed out
+        simulation.nodes(groupedEntities.concat(groupedNewEntities))
+        .on("tick", function() {
+            bubbles.attr("cx", function(d) {
+                    return projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat])[0];
+                })
+                .attr("cy", function(d) {
+                    return projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat])[1];
+                });
+    
+            newBubbles.attr("x", function(d) {
+                    return projection([d.values[0].LONG, d.values[0].LAT])[0] - (Math.sqrt(d.entityCount) * 0.02);
+                })
+                .attr("y", function(d) {
+                    return projection([d.values[0].LONG, d.values[0].LAT])[1] - (Math.sqrt(d.entityCount) * 0.02);
+                })
+                .attr("width", function(d) {
+                    return Math.sqrt(d.entityCount) * 0.02 * 2;
+                })
+                .attr("height", function(d) {
+                    return Math.sqrt(d.entityCount) * 0.02 * 2;
+                });
+        });
         // Tooltip for displaying city names and entity counts
         var tooltip = d3.select("#map").append("div")
             .attr("class", "tooltip")
@@ -114,22 +178,10 @@
         // Function to show residents list
         function showResidentsList(city) {
             console.log("Clicked on city:", city);
-        
-            // Clear the existing list content
-            residentsList.selectAll("li").remove();
-        
-            // Display the city name in the residents list
-            residentsList.append("li")
-                .attr("class", "list-group-item")
-                .text(city.key + " - Residents: " + city.entityCount);
-        }
 
-        function showResidentsList(city) {
-            console.log("Clicked on city:", city);
-        
             // Clear the existing list content
             residentsList.selectAll("li").remove();
-        
+
             // Display the city name in the residents list
             residentsList.append("li")
                 .attr("class", "list-group-item")
@@ -141,6 +193,7 @@
             .on("click", function() {
                 showBubbles = !showBubbles;
                 bubbles.style("display", showBubbles ? "initial" : "none");
+                newBubbles.style("display", showBubbles ? "initial" : "none");
             });
     }
 
@@ -152,7 +205,7 @@
     svg.call(zoom);
 
     function zoomed() {
-        svg.selectAll("path, circle, text")
+        svg.selectAll("path, circle, rect, text")
             .attr("transform", d3.event.transform);
     }
 })();
