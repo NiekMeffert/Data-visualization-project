@@ -312,8 +312,6 @@ for i in metadata[metadata['Camps'].isna() == False]['Camps2'].index:
 
 
 
-# Make dict with camps and subcamps
-camps_subcamps = {'Buchenwald':['Berga-Elster'],'Auschwitz':[], 'Gross-Rosen': ['Fünfteichen']}
 
 
 # Place of birth
@@ -353,7 +351,7 @@ for i in range(len(metadata)):
 
 
 
-
+'''
 # FIND GEOLOCATIONS
 # Load API key from Google Maps API
 with open('api_key.txt') as f:
@@ -390,9 +388,9 @@ print(len(places))
 #        places.append(key)
 #print(len(places))
 
-'''
+
 # Geocode place names
-'''
+
 geo_dict = {}
 c = 0
 
@@ -411,7 +409,7 @@ for i in range(len(places)):
 
 print(geo_dict)
 print(c)
-'''
+
 
 
 geo_dict = {}
@@ -436,7 +434,7 @@ for i in range(len(errors)):
     location = geolocator_google.geocode(components={"city": str(errors[i])}, exactly_one=False)
     print(location)
 
-
+'''
 '''
 ## Put into dataframe
 for key, value in birth_geo_dict.items():
@@ -475,7 +473,7 @@ for key, value in birth_geo_dict.items():
 
 geo = {'type': 'FeatureCollection',
        "features":[]}
-'''
+
 for key, value in geo_dict.items():
     if key == 'nan':
         pass
@@ -508,8 +506,9 @@ with open('data/residence_count.json','w', encoding='UTF-8') as fp:
 fp.close()
 
 
-
+'''
 # Save geoJSON
 with open('data/geo_no_camps.json','w', encoding='UTF-8') as fp:
     json.dump(geo,fp)
 fp.close()
+'''

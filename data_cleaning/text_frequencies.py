@@ -8,6 +8,7 @@ Created on Tue Dec  5 14:02:24 2023
 import os
 import json
 
+import functions
 import nltk
 from nltk import word_tokenize
 from nltk.probability import FreqDist
@@ -81,6 +82,7 @@ def nltk_frequencies(text):
     stopwords_list.extend(["got","one", "day", "two", "six", "pm", "am", "ii", 'also'])
     
     #create an empty list to store clean words
+
     clean_words = []
     
     #Iterate through the words_no_punc list and add non stopwords to the new clean_words list
@@ -92,7 +94,6 @@ def nltk_frequencies(text):
     fdist = FreqDist(clean_words)        
     
     return fdist
-
 
    # set path
 cwd = os.getcwd()
