@@ -153,10 +153,11 @@ for i in range(len(l)):
             
     
 
-
+'''
 with open('data/word_counts.json','w', encoding='UTF-8') as fp:
     json.dump(freq_dict, fp)   
 fp.close()
+'''
 
 with open('data/word_counts1.json','w', encoding='UTF-8') as fp:
     json.dump(freq_dict1, fp)   

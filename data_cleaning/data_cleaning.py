@@ -351,6 +351,23 @@ for i in range(len(metadata)):
         d_residence[metadata.loc[i,'Place_of_residence']] = 1
 
 
+# Ghetto
+l1 = ['Técs?', 'T?cs', '###', 'Érsekújvár', 'Fels?visó', 'Munkács, téglagyár', 'Munkács - téglagyár'] # Wrong names
+l2 = ['Técso', 'Técso', 'nan', 'Érsekujvár', 'Felsovisó', 'Munkács téglagyár', 'Munkács téglagyár'] # Correct names
+for i in range(len(l1)):
+     metadata.loc[metadata['Place_of_birth'] == l1[i],'Place_of_birth'] = l2[i]
+
+
+# make dict
+d_ghetto = {}
+for i in range(len(metadata)):
+    if metadata.loc[i,'Ghetto'] in d_ghetto.keys():
+        d_ghetto[metadata.loc[i,'Ghetto']] += 1
+    else:
+        d_ghetto[metadata.loc[i,'Ghetto']] = 1
+
+
+
 
 '''
 # FIND GEOLOCATIONS
@@ -509,6 +526,9 @@ with open('data/residence_count.json','w', encoding='UTF-8') as fp:
     json.dump(d_residence, fp)   
 fp.close()
 
+with open('data/ghetto_count.json','w', encoding='UTF-8') as fp:
+    json.dump(d_ghetto, fp)   
+fp.close()
 
 '''
 # Save geoJSON
