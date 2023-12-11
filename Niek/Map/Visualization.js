@@ -21,7 +21,7 @@
         .defer(d3.csv, "geo_no_camps.csv")
         .defer(d3.json, "birth_count.json")
         .defer(d3.csv, "SS_Camps_Definitive.csv")
-        .defer(d3.json, "camp_count.json")
+        .defer(d3.json, "camp_count_new.json")
         .defer(d3.json, "clean_data2.json") // Replace with the actual file name
         .await(ready);
 
@@ -98,7 +98,7 @@
         // Groups Entities for the Subcamps    
         var groupedNewEntities = d3.nest()
             .key(function (d) {
-                return d.SUBCAMP;
+                return d.MAIN;
             })
             .entries(newEntities);
 
@@ -193,51 +193,70 @@
                 newBubbles.style("display", showBubbles ? "initial" : "none");
             });
 
-        // Function to update lines connecting bubbles with the same testimony IDs
-        function updateLines() {
-            // Remove existing lines
-            svg.selectAll(".connection-line").remove();
+       // Function to update lines connecting bubbles with the same testimony IDs
+function updateLines() {
+    // Remove existing lines
+    svg.selectAll(".connection-line").remove();
 
-            // Draw lines between bubbles with the same testimony IDs
-            groupedEntities.forEach(function (entity) {
-                if (entity.testimonyIDs && entity.testimonyIDs.length > 1) {
-                    var coordinates = getBubbleCoordinates(entity);
-                    drawLines(coordinates);
-                }
-            });
-
-            groupedNewEntities.forEach(function (newEntity) {
-                if (newEntity.testimonyIDs && newEntity.testimonyIDs.length > 1) {
-                    var coordinates = getBubbleCoordinates(newEntity);
-                    drawLines(coordinates);
-                }
-            });
+    // Draw lines between bubbles with the same testimony IDs
+    groupedEntities.forEach(function (entity) {
+        if (entity.testimonyIDs && entity.testimonyIDs.length > 0) {
+            var coordinates = getBubbleCoordinates(entity);
+            drawLines(coordinates);
         }
+    });
 
-        // Function to get the coordinates of a bubble
-        function getBubbleCoordinates(bubble) {
-            var coordinates = [];
-        
-            bubble.testimonyIDs.forEach(function (testimonyID) {
-                var entity = groupedEntities.find(function (e) {
-                    return e.testimonyIDs && e.testimonyIDs.includes(testimonyID);
-                });
-        
-                if (entity) {
-                    coordinates.push(projection([entity.values[0].geometry_coordinates_long, entity.values[0].geometry_coordinates_lat]));
-                }
-        
-                var newEntity = groupedNewEntities.find(function (ne) {
-                    return ne.testimonyIDs && ne.testimonyIDs.includes(testimonyID);
-                });
-        
-                if (newEntity) {
-                    coordinates.push(projection([newEntity.values[0].LONG, newEntity.values[0].LAT]));
-                }
-            });
-        
-            return coordinates;
+    groupedNewEntities.forEach(function (newEntity) {
+        if (newEntity.testimonyIDs && newEntity.testimonyIDs.length > 0) {
+            var coordinates = getBubbleCoordinates(newEntity);
+            drawLines(coordinates);
         }
+    });
+}
+
+// Function to get the coordinates of a bubble
+function getBubbleCoordinates(bubble) {
+    var coordinates = [];
+
+    bubble.testimonyIDs.forEach(function (testimonyID) {
+        var entity = groupedEntities.find(function (e) {
+            return e.testimonyIDs && e.testimonyIDs.includes(testimonyID);
+        });
+
+        var newEntity = groupedNewEntities.find(function (ne) {
+            return ne.testimonyIDs && ne.testimonyIDs.includes(testimonyID);
+        });
+
+        if (entity && newEntity) {
+            coordinates.push(projection([entity.values[0].geometry_coordinates_long, entity.values[0].geometry_coordinates_lat]));
+            coordinates.push(projection([newEntity.values[0].LONG, newEntity.values[0].LAT]));
+        }
+    });
+
+    return coordinates;
+}
+
+       // Function to get the coordinates of a bubble
+function getBubbleCoordinates(bubble) {
+    var coordinates = [];
+
+    bubble.testimonyIDs.forEach(function (testimonyID) {
+        var entity = groupedEntities.find(function (e) {
+            return e.testimonyIDs && e.testimonyIDs.includes(testimonyID);
+        });
+
+        var newEntity = groupedNewEntities.find(function (ne) {
+            return ne.testimonyIDs && ne.testimonyIDs.includes(testimonyID);
+        });
+
+        if (entity && newEntity) {
+            coordinates.push(projection([entity.values[0].geometry_coordinates_long, entity.values[0].geometry_coordinates_lat]));
+            coordinates.push(projection([newEntity.values[0].LONG, newEntity.values[0].LAT]));
+        }
+    });
+
+    return coordinates;
+}
 
         // Function to draw lines between coordinates
         function drawLines(coordinates) {
@@ -248,7 +267,7 @@
                     .x(function (d) { return d[0]; })
                     .y(function (d) { return d[1]; })
                     .curve(d3.curveCatmullRomClosed))
-                .style("stroke", "red")
+                .style("stroke", "#DAA947")
                 .style("stroke-width", 0.2)
                 .style("fill", "none")
                 .style("stroke-dasharray", "1,1");
