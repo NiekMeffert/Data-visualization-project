@@ -301,13 +301,13 @@ metadata['Camps2'] = metadata['Camps'].map(spl, na_action='ignore') # Use mappin
 l = list(range(len(metadata)))
 metadata.index = l # Correct indexes so no numbers are missing
 
-d = {}
+d_camps = {}
 for i in metadata[metadata['Camps'].isna() == False]['Camps2'].index:
     for j in range(len(metadata['Camps2'][i])):
-        if metadata['Camps2'][i][j] in d.keys():
-            d[metadata['Camps2'][i][j]] += 1
+        if metadata['Camps2'][i][j] in d_camps.keys():
+            d_camps[metadata['Camps2'][i][j]] += 1
         else:
-            d[metadata['Camps2'][i][j]] = 1
+            d_camps[metadata['Camps2'][i][j]] = 1
  
     
 
@@ -498,7 +498,7 @@ metadata.to_json(orient='split',path_or_buf =  save_path)
 
 # Save dict d
 with open('data/camp_count_new.json','w', encoding='UTF-8') as fp:
-    json.dump(d, fp)   
+    json.dump(d_camps, fp)   
 fp.close()
 
 with open('data/birth_count.json','w', encoding='UTF-8') as fp:
