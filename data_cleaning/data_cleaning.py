@@ -79,6 +79,7 @@ print(f"Number of NAs: {sum(metadata['Camps'].isna())}")
 #print(metadata['Camps'].unique())
 
 
+# Make Camps2 column
 spl = lambda x: x.split(', ') # make lambda function
 metadata['Camps2'] = metadata['Camps'].map(spl, na_action='ignore') # Use mapping
 l = list(range(len(metadata)))
@@ -268,10 +269,10 @@ for i in metadata[metadata['Camps'].isna() == False]['Camps2'].index:
 # Making another run of this
 
 # wrong names
-l1 = ['Auscwitz', 'Aushwitz', 'Bergaelster','Berga am Elster', 'Bergen Belsen', 'Bergen - Belsen', 'Bireknau', 'Birkenbau', 'Dora (Nordhausen)','Grossrosen']
+l1 = ['Auscwitz', 'Aushwitz', 'Bergaelster','Berga am Elster', 'Bergen Belsen', 'Bergen - Belsen', 'Bireknau', 'Birkenbau', 'Dora (Nordhausen)','Grossrosen', ' Sachsenhausen']
 
 # correct names
-l2 = ['Auschwitz', 'Auschwitz', 'Berga-Elster', 'Berga-Elster','Bergen-Belsen','Bergen-Belsen', 'Auschwitz', 'Auschwitz', 'Dora', 'Gross-Rosen']
+l2 = ['Auschwitz', 'Auschwitz', 'Berga-Elster', 'Berga-Elster','Bergen-Belsen','Bergen-Belsen', 'Auschwitz', 'Auschwitz', 'Dora', 'Gross-Rosen', 'Sachsenhausen']
 
 for i in range(len(l1)):
     l = metadata.loc[metadata['Camps'].str.contains(l1[i]) == True].index
@@ -281,10 +282,10 @@ for i in range(len(l1)):
         
 
 # wrong names
-l1 = ['Theresienstedt','Theresiestadt', 'Thereienstadt', 'Therisienstadt']
+l1 = ['Theresienstedt','Theresiestadt', 'Thereienstadt', 'Therisienstadt', ' Salzwedel', 'Offenbrug', ' Mauthausen', 'Győr', ' Ohrdruf', ' Görlitz', ' Reichenbach']
 
 # correct names
-l2 = ['Theresienstadt', 'Theresienstadt', 'Theresienstadt', 'Theresienstadt']
+l2 = ['Theresienstadt', 'Theresienstadt', 'Theresienstadt', 'Theresienstadt', 'Salzwedel', 'Offenburg', 'Mauthausen', 'Györ', 'Ohrdruf', 'Görlitz', 'Reichenbach']
 
 for i in range(len(l1)):
     l = metadata.loc[metadata['Camps'].str.contains(l1[i]) == True].index
@@ -487,13 +488,16 @@ for key, value in geo_dict.items():
 
 '''
 
+
+
+
 # SAVE CLEANED DATA AS JSON FILE
 cwd = os.getcwd()
 save_path = cwd+'\\data\\clean_data2.json'
 metadata.to_json(orient='split',path_or_buf =  save_path)
 
 # Save dict d
-with open('data/camp_count.json','w', encoding='UTF-8') as fp:
+with open('data/camp_count_new.json','w', encoding='UTF-8') as fp:
     json.dump(d, fp)   
 fp.close()
 
