@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
-
 import pandas as pd
 import os
 import numpy as np
@@ -13,7 +7,6 @@ import json
 
 from geopy.geocoders import GoogleV3
 from geopy.geocoders import Nominatim
-from geopy.geocoders import Bing
 
 # Set working directory
 absolute_path = 'Dokumenter/GitHub/Data-visualization-project/data_cleaning'

@@ -6,7 +6,7 @@ Created on Tue Dec  5 14:02:24 2023
 """
 
 import os
-
+import json
 
 import nltk
 from nltk import word_tokenize
@@ -78,7 +78,7 @@ def nltk_frequencies(text):
     
     
     #Update the stopwords list
-    stopwords_list.extend(["got","one", "day", "two"])
+    stopwords_list.extend(["got","one", "day", "two", "six", "pm", "am", "ii", 'also'])
     
     #create an empty list to store clean words
     clean_words = []
@@ -103,11 +103,13 @@ print(path)
 l = os.listdir(path)
 freq_dict = {'texts':[]}  
 
+'''
 for i in range(len(l)):
     file = path+l[i]
     print(file)
     t = open(file, encoding='UTF-8')
     text = t.read()
+    t.close()
     #words = clean_text(t)
     fdist = nltk_frequencies(text)
     # Put into JSON format
@@ -121,9 +123,57 @@ for i in range(len(l)):
             })
     for key,value in fdist.items():
         freq_dict['texts'][i]['words'].update({key:value})
+'''
 
 
 
+# Better storage solution
+freq_dict1 = {
+    'words': {}
+    }
+
+for i in range(len(l)):
+    file = path+l[i]
+    print(file)
+    t = open(file, encoding='UTF-8')
+    text = t.read()
+    t.close()
+    #words = clean_text(t)
+    fdist = nltk_frequencies(text)
+    for key,value in fdist.items():
+        if key not in freq_dict1['words']:
+            freq_dict1['words'][key] = {'count': value}
+            freq_dict1['words'][key]['file'] = [l[i]]
+        if key in freq_dict1['words']:
+            print(freq_dict1['words'][key])
+            c = freq_dict1['words'][key]['count']
+            freq_dict1['words'][key].update({'count':c+value})
+            freq_dict1['words'][key]['file'].append(l[i])
+            
+    
+
+
+with open('data/word_counts.json','w', encoding='UTF-8') as fp:
+    json.dump(freq_dict, fp)   
+fp.close()
+
+with open('data/word_counts1.json','w', encoding='UTF-8') as fp:
+    json.dump(freq_dict1, fp)   
+fp.close()
+'''
+{'words':
+     {word1:
+          {count:
+           files:[]
+           }
+     },
+    {word1:
+         {count:
+          files:[]
+          }
+    }
+ }
+'''
 '''
 format for frequencies dict
 
@@ -146,22 +196,6 @@ format for frequencies dict
   ] 
  }
 '''
-
-
-
-# set path
-cwd = os.getcwd()
-path = cwd+'\\data\\text-en_clean\\'
-    
-# get list of documents in path
-l = os.listdir(path)
-
-for i in range(1):
-    file_path = path+l[i]
-    print(file_path)
-    text_file = open(file, encoding='UTF-8')
-    text = text_file.read()
-    print(text)
 
 
 
