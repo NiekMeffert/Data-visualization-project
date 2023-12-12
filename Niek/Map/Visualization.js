@@ -65,35 +65,69 @@
             city.entityCount = count;
         });
 
-        // Creates Circles for each city in groupedEntities
-        var bubbles = svg.selectAll(".city-bubble")
-            .data(groupedEntities)
-            .enter().append("circle")
-            .attr("r", function (d) {
-                return Math.sqrt(d.entityCount) * 0.5;
-            })
-            .attr("class", "city-bubble")
-            .attr("fill-opacity", 0.6)
-            .on('mouseover', function (d) {
-                d3.select(this).classed("selected", true);
-                tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                tooltip.html(d.key + "<br/>Residents: " + d.entityCount)
-                    .style("left", (d3.event.pageX + 10) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");
-            })
-            .on('mouseout', function (d) {
-                d3.select(this).classed("selected", false);
-                tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            })
-            .on('click', function (d) {
-                selectedEntity = d;
-                updateLines();
-                showResidentsList(d);
-            });
+      // Creates Circles for each city in groupedEntities
+var bubbles = svg.selectAll(".city-bubble")
+.data(groupedEntities)
+.enter().append("g")
+.attr("class", "city-bubble-group")
+.on('mouseover', function (d) {
+    d3.select(this).select("circle").classed("selected", true);
+    tooltip.transition()
+        .duration(200)
+        .style("opacity", 1);
+    tooltip.html(d.key + "<br/>Residents: " + d.entityCount)
+        .style("left", (d3.event.pageX + 10) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
+})
+.on('mouseout', function (d) {
+    d3.select(this).select("circle").classed("selected", false);
+    tooltip.transition()
+        .duration(500)
+        .style("opacity", 0);
+})
+.on('click', function (d) {
+    if (selectedEntity === d) {
+        selectedEntity = null;
+    } else {
+        selectedEntity = d;
+    }
+    updateLines();
+    showResidentsList(d);
+});
+
+// Append circle to each group
+bubbles.append("circle")
+.attr("r", function (d) {
+    return Math.sqrt(d.entityCount) * 0.5;
+})
+.attr("class", "city-bubble")
+.attr("fill-opacity", 0.7)
+.attr("cx", function (d) {
+    return projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat])[0];
+})
+.attr("cy", function (d) {
+    return projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat])[1];
+});
+
+// This piece creates images inside the bubbles
+
+//bubbles.append("image")
+//.attr("xlink:href", "City_logo.png") // Adjust the path to your image
+//.attr("x", function (d) {
+ //   return projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat])[0] - Math.sqrt(d.entityCount) * 0.5;
+//})
+//.attr("y", function (d) {
+  //  return projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat])[1] - Math.sqrt(d.entityCount) * 0.5;
+//})
+//.attr("width", function (d) {
+  //  return Math.sqrt(d.entityCount);
+//})
+//.attr("height", function (d) {
+  //  return Math.sqrt(d.entityCount);
+//});
+
+
+            
 
         // Groups Entities for the Subcamps    
         var groupedNewEntities = d3.nest()
@@ -110,83 +144,141 @@
 
         // Creates rectangles for each city in groupedNewEntities
         var newBubbles = svg.selectAll(".new-city-bubble")
-            .data(groupedNewEntities)
-            .enter().append("rect")
-            .attr("width", function (d) {
-                return d.campCount * 0.1;
-            })
-            .attr("height", function (d) {
-                return d.campCount * 0.1;
-            })
-            .attr("class", "new-city-bubble")
-            .style("fill-opacity", 0.6)
-            .style("fill", "#69b3a2")
-            .on('mouseover', function (d) {
-                d3.select(this).classed("selected", true);
-                tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
+    .data(groupedNewEntities)
+    .enter().append("circle") // Change "rect" to "circle"
+    .attr("r", function (d) { // Use "r" instead of "width" and "height"
+        return d.campCount * 0.05;
+    })
+    .attr("class", "new-city-bubble")
+    .style("fill-opacity", 0.6)
+    .style("fill", "#69b3a2")
+    .on('mouseover', function (d) {
+        d3.select(this).classed("selected", true);
+        tooltip.transition()
+            .duration(200)
+            .style("opacity", .9);
 
-                tooltip.html(d.key + "<br/>Camp Count: " + d.campCount)
-                    .style("left", (d3.event.pageX + 10) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");
-            })
-            .on('mouseout', function (d) {
-                d3.select(this).classed("selected", false);
-                tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            })
-            .on('click', function (d) {
-                selectedEntity = d;
-                updateLines();
-                showResidentsList(d);
-            });
+        tooltip.html(d.key + "<br/>Camp Count: " + d.campCount)
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 28) + "px");
+    })
+    .on('mouseout', function (d) {
+        d3.select(this).classed("selected", false);
+        tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
+    })
+    .on('click', function (d) {
+        if (selectedEntity === d) {
+            selectedEntity = null;
+        } else {
+            selectedEntity = d;
+        }
+        updateLines();
+        showResidentsList(d);
+    });
+
 
         // Associate testimony data with bubbles
         associateDataWithBubbles(testimonyData, groupedEntities, groupedNewEntities);
 
         simulation.nodes(groupedEntities.concat(groupedNewEntities))
-            .on("tick", function () {
-                bubbles.attr("cx", function (d) {
-                    return projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat])[0];
-                })
-                    .attr("cy", function (d) {
-                        return projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat])[1];
-                    });
-
-                newBubbles.attr("x", function (d) {
-                    return projection([d.values[0].LONG, d.values[0].LAT])[0] - (d.campCount * 0.05);
-                })
-                    .attr("y", function (d) {
-                        return projection([d.values[0].LONG, d.values[0].LAT])[1] - (d.campCount * 0.05);
-                    });
-
-                updateLines();
+    .on("tick", function () {
+        bubbles.attr("cx", function (d) {
+            return projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat])[0];
+        })
+            .attr("cy", function (d) {
+                return projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat])[1];
             });
+
+        newBubbles.attr("cx", function (d) { // Change "x" to "cx"
+            return projection([d.values[0].LONG, d.values[0].LAT])[0];
+        })
+            .attr("cy", function (d) { // Change "y" to "cy"
+                return projection([d.values[0].LONG, d.values[0].LAT])[1];
+            });
+
+        updateLines();
+    });
 
         var tooltip = d3.select("#map").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        var residentsList = d3.select("#residents-list")
-            .append("ul")
-            .attr("class", "list-group");
+            var residentsList = d3.select("#residents-list")
+        .append("ul")
+        .attr("class", "list-group")
+        .style("max-height", "400px") // Set a maximum height for the list
+        .style("overflow-y", "auto"); // Add a scroll for overflow
 
-        function showResidentsList(city) {
-            console.log("Clicked on city:", city);
-            residentsList.selectAll("li").remove();
-            residentsList.append("li")
-                .attr("class", "list-group-item")
-                .text(city.key + ": Testimony IDs - " + (city.testimonyIDs ? city.testimonyIDs.join(", ") : "None"));
+    var textContentDiv = d3.select("#residents-list")
+        .append("div")
+        .attr("id", "text-content");
+
+    function showResidentsList(city) {
+        console.log("Clicked on city:", city);
+
+        residentsList.selectAll("li").remove();
+
+        var testimonyItems = residentsList
+            .append("li")
+            .attr("class", "list-group-item")
+            .style("font-size", "25px") // Set the desired font size
+            .text(city.key + " " )
+            .selectAll("li.testimony-id-item")
+            .data(city.testimonyIDs || [])
+            .enter().append("li")
+            .attr("class", "list-group-item testimony-id-item")
+            .text(function (d) { return "Testimony ID: " + d; })
+            .on('mouseover', function () {
+                d3.select(this).style("font-weight", "bold");
+            })
+            .on('mouseout', function () {
+                if (!d3.select(this).classed("selected")) {
+                    d3.select(this).style("font-weight", "normal");
+                }
+            })
+            .on('click', function (testimonyID) {
+                if (d3.select(this).classed("selected")) {
+                    d3.select(this).classed("selected", false).style("font-weight", "normal");
+                } else {
+                    residentsList.selectAll(".testimony-id-item").classed("selected", false).style("font-weight", "normal");
+                    d3.select(this).classed("selected", true).style("font-weight", "bold");
+                    displayTextContent(testimonyID);
+                }
+            });
+    }
+    
+        function displayTextContent(testimonyID) {
+            var textFilePath = 'text-en_clean/' + testimonyID + '.txt';
+    
+            d3.text(textFilePath, function (error, textContent) {
+                if (error) {
+                    console.error('Error loading text content:', error);
+                    return;
+                }
+    
+                textContentDiv.html('<strong>Text Content:</strong><br>' + textContent);
+            });
         }
 
         d3.select("#toggleButton")
+        .on("click", function () {
+            showBubbles = !showBubbles;
+            bubbles.style("display", showBubbles ? "initial" : "none");
+            
+        });
+       
+
+            d3.select("#togglecampsButton")
             .on("click", function () {
                 showBubbles = !showBubbles;
-                bubbles.style("display", showBubbles ? "initial" : "none");
+                
                 newBubbles.style("display", showBubbles ? "initial" : "none");
             });
+
+
+
 
         d3.select("#toggleLinesButton")
             .on("click", function () {
@@ -225,17 +317,20 @@
         }
 
         function drawLines(coordinates) {
+            var line = d3.line()
+                .x(function (d) { return d[0]; })
+                .y(function (d) { return d[1]; })
+                .curve(d3.curveCatmullRomClosed);
+        
             svg.append("path")
                 .datum(coordinates)
                 .attr("class", "connection-line")
-                .attr("d", d3.line()
-                    .x(function (d) { return d[0]; })
-                    .y(function (d) { return d[1]; })
-                    .curve(d3.curveCatmullRomClosed))
+                .attr("d", line)
                 .style("stroke", "#DAA947")
                 .style("stroke-width", 0.2)
                 .style("fill", "none")
-                .style("stroke-dasharray", "1,1");
+                .style("stroke-dasharray", "1,1")
+                .attr("transform", d3.zoomTransform(svg.node())); // Apply the current zoom transformation
         }
     }
 
@@ -246,7 +341,7 @@
     svg.call(zoom);
 
     function zoomed() {
-        svg.selectAll("path, circle, rect, text, .connection-line, connection-line, path")
+        svg.selectAll("path, circle, rect, text, .connection-line, connection-line, path, image")
             .attr("transform", d3.event.transform);
 
         updateLines();
