@@ -14,6 +14,8 @@
 
     // Variable that helps with toggling icons    
     var showBubbles = true;
+    var showLines = true; // New variable for toggling lines
+    var selectedEntity = null; // New variable to track the selected entity
 
     // All the files I need to call
     d3.queue()
@@ -81,17 +83,15 @@
                     .style("left", (d3.event.pageX + 10) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
             })
-
-            // Fades the text over the city when not hovering
             .on('mouseout', function (d) {
                 d3.select(this).classed("selected", false);
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
-
-                // Shows resident list when clicking on a city        
             })
             .on('click', function (d) {
+                selectedEntity = d;
+                updateLines();
                 showResidentsList(d);
             });
 
@@ -131,16 +131,15 @@
                     .style("left", (d3.event.pageX + 10) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
             })
-
-            // Fades text when not hovering
             .on('mouseout', function (d) {
                 d3.select(this).classed("selected", false);
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
             })
-
             .on('click', function (d) {
+                selectedEntity = d;
+                updateLines();
                 showResidentsList(d);
             });
 
@@ -163,7 +162,6 @@
                         return projection([d.values[0].LONG, d.values[0].LAT])[1] - (d.campCount * 0.05);
                     });
 
-                // Update the lines connecting bubbles with the same testimony IDs
                 updateLines();
             });
 
@@ -175,8 +173,6 @@
             .append("ul")
             .attr("class", "list-group");
 
-        // In summary, this function updates the residents' list on the webpage to show information about 
-        // the clicked city or camp, including the associated testimony IDs.
         function showResidentsList(city) {
             console.log("Clicked on city:", city);
             residentsList.selectAll("li").remove();
@@ -185,7 +181,6 @@
                 .text(city.key + ": Testimony IDs - " + (city.testimonyIDs ? city.testimonyIDs.join(", ") : "None"));
         }
 
-        // Toggles the visuals on the map
         d3.select("#toggleButton")
             .on("click", function () {
                 showBubbles = !showBubbles;
@@ -193,72 +188,42 @@
                 newBubbles.style("display", showBubbles ? "initial" : "none");
             });
 
-       // Function to update lines connecting bubbles with the same testimony IDs
-function updateLines() {
-    // Remove existing lines
-    svg.selectAll(".connection-line").remove();
+        d3.select("#toggleLinesButton")
+            .on("click", function () {
+                showLines = !showLines;
+                svg.selectAll(".connection-line").style("display", showLines ? "initial" : "none");
+            });
 
-    // Draw lines between bubbles with the same testimony IDs
-    groupedEntities.forEach(function (entity) {
-        if (entity.testimonyIDs && entity.testimonyIDs.length > 0) {
-            var coordinates = getBubbleCoordinates(entity);
-            drawLines(coordinates);
+        function updateLines() {
+            svg.selectAll(".connection-line").remove();
+
+            if (selectedEntity && showLines) {
+                var coordinates = getBubbleCoordinates(selectedEntity);
+                drawLines(coordinates);
+            }
         }
-    });
 
-    groupedNewEntities.forEach(function (newEntity) {
-        if (newEntity.testimonyIDs && newEntity.testimonyIDs.length > 0) {
-            var coordinates = getBubbleCoordinates(newEntity);
-            drawLines(coordinates);
+        function getBubbleCoordinates(bubble) {
+            var coordinates = [];
+
+            bubble.testimonyIDs.forEach(function (testimonyID) {
+                var entity = groupedEntities.find(function (e) {
+                    return e.testimonyIDs && e.testimonyIDs.includes(testimonyID);
+                });
+
+                var newEntity = groupedNewEntities.find(function (ne) {
+                    return ne.testimonyIDs && ne.testimonyIDs.includes(testimonyID);
+                });
+
+                if (entity && newEntity) {
+                    coordinates.push(projection([entity.values[0].geometry_coordinates_long, entity.values[0].geometry_coordinates_lat]));
+                    coordinates.push(projection([newEntity.values[0].LONG, newEntity.values[0].LAT]));
+                }
+            });
+
+            return coordinates;
         }
-    });
-}
 
-// Function to get the coordinates of a bubble
-function getBubbleCoordinates(bubble) {
-    var coordinates = [];
-
-    bubble.testimonyIDs.forEach(function (testimonyID) {
-        var entity = groupedEntities.find(function (e) {
-            return e.testimonyIDs && e.testimonyIDs.includes(testimonyID);
-        });
-
-        var newEntity = groupedNewEntities.find(function (ne) {
-            return ne.testimonyIDs && ne.testimonyIDs.includes(testimonyID);
-        });
-
-        if (entity && newEntity) {
-            coordinates.push(projection([entity.values[0].geometry_coordinates_long, entity.values[0].geometry_coordinates_lat]));
-            coordinates.push(projection([newEntity.values[0].LONG, newEntity.values[0].LAT]));
-        }
-    });
-
-    return coordinates;
-}
-
-       // Function to get the coordinates of a bubble
-function getBubbleCoordinates(bubble) {
-    var coordinates = [];
-
-    bubble.testimonyIDs.forEach(function (testimonyID) {
-        var entity = groupedEntities.find(function (e) {
-            return e.testimonyIDs && e.testimonyIDs.includes(testimonyID);
-        });
-
-        var newEntity = groupedNewEntities.find(function (ne) {
-            return ne.testimonyIDs && ne.testimonyIDs.includes(testimonyID);
-        });
-
-        if (entity && newEntity) {
-            coordinates.push(projection([entity.values[0].geometry_coordinates_long, entity.values[0].geometry_coordinates_lat]));
-            coordinates.push(projection([newEntity.values[0].LONG, newEntity.values[0].LAT]));
-        }
-    });
-
-    return coordinates;
-}
-
-        // Function to draw lines between coordinates
         function drawLines(coordinates) {
             svg.append("path")
                 .datum(coordinates)
@@ -274,19 +239,17 @@ function getBubbleCoordinates(bubble) {
         }
     }
 
-    // Zooms in and out of the map
     var zoom = d3.zoom()
         .scaleExtent([1, 30])
         .on("zoom", zoomed);
-        
 
     svg.call(zoom);
 
     function zoomed() {
-        svg.selectAll("path, circle, rect, text, .connection-line, connection-line")
+        svg.selectAll("path, circle, rect, text, .connection-line, connection-line, path")
             .attr("transform", d3.event.transform);
 
-            updateLines();
+        updateLines();
     }
 
     // In summary, this function iterates through each record in the testimonyData 
