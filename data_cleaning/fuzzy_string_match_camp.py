@@ -7,8 +7,6 @@ Created on Thu Dec 14 10:46:21 2023
 
 import pandas as pd
 import os
-import thefuzz
-import numpy as np
 from thefuzz import process
 from collections import Counter
 import json
