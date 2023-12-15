@@ -1,7 +1,7 @@
 type,geometry_type,geometry_coordinates_long,geometry_coordinates_lat,properties_Place_name
 feature,Point,19.040235,47.497912,Budapest
 feature,Point,19.503304,47.162494,Fels?veresmart
-feature,Point,19.503304,47.162494,Munkács
+feature,Point,22.717322,48.439153,Munkács
 feature,Point,19.503304,47.162494,Zsolna
 feature,Point,19.503304,47.162494,##szárnya
 feature,Point,19.7059592,47.92414040000001,Pásztó
@@ -9,7 +9,7 @@ feature,Point,18.0677287,46.9100184,Mihályka
 feature,Point,23.8775791,47.9557094,Aknaszlatina
 feature,Point,18.0012442,47.592676,Tárkány
 feature,Point,23.0332798,48.5637949,Hársfalva
-feature,Point,19.503304,47.162494,Huszt
+feature,Point,23.302906,48.175860,Huszt
 feature,Point,19.503304,47.162494,Ilosva
 feature,Point,21.2784255,46.6473027,Gyula
 feature,Point,19.503304,47.162494,Ruszkavoda
@@ -34,7 +34,7 @@ feature,Point,19.503304,47.162494,Podhering
 feature,Point,19.503304,47.162494,Keselymezo
 feature,Point,20.9654647,48.1026673,Gesztely
 feature,Point,19.503304,47.162494,Igló
-feature,Point,19.503304,47.162494,Ungvár
+feature,Point,22.283429,48.627718,Ungvár
 feature,Point,22.5089067,48.5412136,Szerednye
 feature,Point,19.503304,47.162494,Stradna
 feature,Point,19.503304,47.162494,Oroszrég
@@ -50,7 +50,7 @@ feature,Point,19.503304,47.162494,Nagyberezna
 feature,Point,18.5263534,46.2981016,Bonyhád
 feature,Point,19.503304,47.162494,Vadászfalva
 feature,Point,22.2740915,48.5826327,Ketergény
-feature,Point,19.503304,47.162494,Nagyvárad
+feature,Point,21.918220,47.077354,Nagyvárad
 feature,Point,19.503304,47.162494,Felsoverecke
 feature,Point,19.503304,47.162494,Felsoremete
 feature,Point,18.7221054,47.3234883,Kajászószentpéter
@@ -86,7 +86,7 @@ feature,Point,23.647865,47.1439283,Alparét
 feature,Point,19.503304,47.162494,Voloc
 feature,Point,22.5316392,48.1055366,Tarpa
 feature,Point,22.1014229,48.2690868,Fényeslitke
-feature,Point,19.503304,47.162494,Kassa
+feature,Point,21.242186,48.684571,Kassa
 feature,Point,19.503304,47.162494,Repede
 feature,Point,19.503304,47.162494,Szenteske
 feature,Point,19.093871,47.411309,Kökényes
@@ -166,7 +166,7 @@ feature,Point,18.7078968,47.6272993,Kis Kirva
 feature,Point,21.0877309,46.6735939,Békéscsaba
 feature,Point,19.503304,47.162494,Uglya
 feature,Point,16.9355448,47.29410499999999,Rábabogyoszló
-feature,Point,19.503304,47.162494,Nagybocskó
+feature,Point,24.004594,47.973813,Nagybocskó
 feature,Point,21.90337,47.3788079,Nagyléta
 feature,Point,22.9825789,48.2376578,Magyarkomját
 feature,Point,19.503304,47.162494,Kishalmágy
@@ -256,7 +256,7 @@ feature,Point,18.4299158,46.2693702,Munkács-Váralja
 feature,Point,19.503304,47.162494,Pátrona
 feature,Point,19.503304,47.162494,Tiszafehéregyháza
 feature,Point,19.503304,47.162494,Kövesdliget
-feature,Point,19.503304,47.162494,Ternova
+feature,Point,36.675747,50.189498,Ternova
 feature,Point,19.503304,47.162494,Tornalja
 feature,Point,19.503304,47.162494,Iza
 feature,Point,19.133333,47.45,Kispest
