@@ -16,7 +16,7 @@ cwd = os.getcwd()
 print('Current Working Directory is: ', cwd)
 
 # Import data set using pandas
-metadata = pd.read_csv("data/testimonies-en.csv", sep="\t", na_values="unknown")
+metadata = pd.read_csv("data/clean_data.csv", sep=",")
 
 # DATA WRANGLING AND INSPECTION
 metadata.value_counts()

@@ -219,3 +219,9 @@ dic = {'all':d, 'sub':d_sub, 'main':d_main
 with open('data/camp_count_all.json','w', encoding='UTF-8') as fp:
     json.dump(dic, fp)   
 fp.close()
+
+
+# Save metadata_df
+path_df = os.path.join(p,'clean_data.csv')
+print(path_df)
+metadata.to_csv(path_df, index=True)
