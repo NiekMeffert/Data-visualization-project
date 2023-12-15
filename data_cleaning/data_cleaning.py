@@ -129,7 +129,8 @@ print(f'Sum of values for d2: {sum(d2.values())}')
 #l = [196, 268, 481]
 #for i in l:
 #    metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Bergen Belsen', 'Bergen - Belsen')
-        
+  
+'''      
 l = metadata.loc[metadata['Camps'].str.contains('Bergenbelsen') == True].index
 for i in l:
     metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Bergenbelsen', 'Bergen-Belsen')
@@ -226,7 +227,6 @@ l = metadata.loc[metadata['Camps'].str.contains('Studhof') == True].index
 for i in l:
     metadata.loc[i,'Camps'] = metadata.loc[i,'Camps'].replace('Studhof', 'Stutthof')
 
-
 # Theresienstadt
 l = metadata.loc[metadata['Camps'].str.contains('Thereienstadt') == True].index
 for i in l:
@@ -309,7 +309,7 @@ for i in metadata[metadata['Camps'].isna() == False]['Camps2'].index:
         else:
             d_camps[metadata['Camps2'][i][j]] = 1
  
-    
+'''    
 
 
 
@@ -513,10 +513,12 @@ cwd = os.getcwd()
 save_path = cwd+'\\data\\clean_data3.json'
 metadata.to_json(orient='split',path_or_buf =  save_path)
 
+'''
 # Save dict d
 with open('data/camp_count_new.json','w', encoding='UTF-8') as fp:
     json.dump(d_camps, fp)   
 fp.close()
+'''
 
 with open('data/birth_count.json','w', encoding='UTF-8') as fp:
     json.dump(d_birth, fp)   
