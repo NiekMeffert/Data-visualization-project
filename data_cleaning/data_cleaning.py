@@ -510,7 +510,7 @@ for key, value in geo_dict.items():
 
 # SAVE CLEANED DATA AS JSON FILE
 cwd = os.getcwd()
-save_path = cwd+'\\data\\clean_data2.json'
+save_path = cwd+'\\data\\clean_data3.json'
 metadata.to_json(orient='split',path_or_buf =  save_path)
 
 # Save dict d
