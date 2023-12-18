@@ -1,7 +1,14 @@
 
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto/Roboto-Medium.ttf') format('truetype'); /* TTF format */
+  }
+  
+  
+
 *
 {
-    font-family: "Helvetica Neue";
+    font-family: "roboto";
 }
 
 
@@ -9,7 +16,9 @@
 body {
     margin: 0;
     overflow: hidden;
-    background: #262f37a8;
+    background-image: url('backgroundtest-01-01.jpg');
+    font-family: 'Roboto', sans-serif;
+    
 }
 
 #topBar {
@@ -81,13 +90,16 @@ svg
 .tooltip 
 {
 
-    
+    background-color: #d8cac5d0;
+    border: 1px solid #433731;
+    border-radius: 5px;
     font-size: 30px; 
     font-weight: bold;
     fill: #7c7c7c;
-    
-    
+    top: 10%;
+    position: absolute;
     padding: 5px;
+    left: 1%;
     
 }
 
@@ -106,14 +118,14 @@ svg
 
 #toggleButton
 {
-    top: 10%;
+    top: 20%;
     left: 0%;
     
 }
 
 #togglecampsButton
 {
-    top: 14.2%;
+    top: 24.2%;
     left: 0%;
     
     
@@ -122,7 +134,7 @@ svg
 
 #toggleLinesButton
 {
-    top: 18.4%;
+    top: 28.4%;
     left: 0%;
     
 }
@@ -165,14 +177,9 @@ svg
     
     border-radius: 5px;
     z-index: 1;
-    text-align: center;
-    overflow-y: auto;   /* Enable vertical scrolling */
+    
 }
 
-#residents-list  {
-    max-height: 600px;  /* Set a fixed height */
-    overflow-y: auto;   /* Enable vertical scrolling */
-    }
     
     /* Style the scrollbar track */
     #residents-list ::-webkit-scrollbar {
@@ -204,7 +211,7 @@ svg
     z-index: 1;
     max-height: 88.5%;  /* Set a fixed height */
     overflow-y: auto;   /* Enable vertical scrolling */
-    text-align: center;
+    text-align: left;
     
 }
 
@@ -242,7 +249,33 @@ svg
     font-size: 14px;
     padding: 0;
     margin: 0;
+
+    text-align: left;
+    overflow-y: auto;   /* Enable vertical scrolling */
 }
+
+#residents-list li   {
+    max-height: 550px;  /* Set a fixed height */
+    overflow-y: auto;   /* Enable vertical scrolling */
+    }
+    
+    /* Style the scrollbar track */
+    #residents-list li  ::-webkit-scrollbar {
+    width: 12px;
+    }
+    
+    /* Style the scrollbar thumb */
+    #residents-list li  ::-webkit-scrollbar-thumb {
+    background-color: #4c4542; /* Color of the scrollbar thumb */
+    border-radius: 6px;
+    }
+    
+    /* Style the scrollbar track */
+    #residents-list li  ::-webkit-scrollbar-track {
+    background-color: #d8cac5; /* Color of the scrollbar track */
+    }
+
+
 
 .list-group-item
 {
@@ -286,5 +319,13 @@ svg
 }
    
 
+.highlight {
+    background-color: yellow;
+    font-weight: bold;
+}
 
+.highlight-new {
+    background-color: lightblue;
+    font-weight: bold;
+}
 

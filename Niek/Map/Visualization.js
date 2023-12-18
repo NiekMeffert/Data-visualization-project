@@ -17,8 +17,8 @@
 
     // Variable that helps with toggling icons    
     var showBubbles = true;
-    var showLines = true; // New variable for toggling lines
-    var selectedEntity = null; // New variable to track the selected entity
+    var showLines = true; 
+    var selectedEntity = null; 
 
     // var initialCenter = [47.1625, 19.5033];  // Set your desired initial center coordinates
 
@@ -29,7 +29,7 @@
         .defer(d3.json, "birth_count.json")
         .defer(d3.csv, "SS_Camps_Definitive.csv")
         .defer(d3.json, "camp_count_new.json")
-        .defer(d3.json, "clean_data2.json") // Replace with the actual file name
+        .defer(d3.json, "clean_data2.json") 
         .await(ready);
 
         // Defines what kind of world map we use    
@@ -86,6 +86,7 @@
         var [x, y] = d3.mouse(this);
         tooltip.transition()
             .duration(200)
+            
             .style("opacity", .9);
 
         tooltip.html(d.key + "<br/>Residents: " + d.entityCount)
@@ -158,7 +159,7 @@
             city.campCount = count;
         });
 
-        // Creates rectangles for each city in groupedNewEntities
+        // Creates Circles for each city in groupedNewEntities
         var newBubbles = svg.selectAll(".new-city-bubble")
             .data(groupedNewEntities)
             .enter().append("circle")
@@ -224,7 +225,7 @@
 
                 updateLines();
             });
-
+            // shows the places name and the resident count
         var tooltip = d3.select("#map").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
@@ -239,7 +240,7 @@
             .append("div")
             .attr("id", "text-content")
             
-        
+        //Is the resident list that stores the Names and testimony ID for each enitity
         function showResidentsList(city) {
             
             residentsList.selectAll("li").remove();
@@ -281,7 +282,7 @@
                     }
                 });
         }
-        
+        //List that shows the testimonies, when clicking on a item in the resident list
         function displayTextContent(testimonyID) 
         {
             var textFilePath = 'text-en_clean/' + testimonyID.id + '.txt';
@@ -303,7 +304,7 @@
                         '</div>');
             });
         }
-
+        //Buttons to toggle the different enitity groups (Cities, Camps etc.)
         d3.select("#toggleButton")
             .on("click", function () 
             {
@@ -363,7 +364,7 @@
             
                 return coordinates;
             }
-
+            //Draws the lines between the entities based on if the ID is availble in each entity
         function drawLines(coordinates) 
         {
             var line = d3.line()
@@ -406,20 +407,18 @@
 
     // this function iterates through each record in the testimonyData 
     // and associates the testimony ID with the corresponding city or new city bubble.
-    function associateDataWithBubbles(testimonyData, groupedEntities, groupedNewEntities) 
-    {
-        testimonyData.data.forEach(function (record) 
-        {
+    function associateDataWithBubbles(testimonyData, groupedEntities, groupedNewEntities) {
+        testimonyData.data.forEach(function (record) {
+
             var placeOfBirth = record[3];
             var testimonyID = record[1];
             var name = record[0]; // Assuming the "Name" column is at index 0
             var camps = record[8];
             
     
-            var entityBubble = groupedEntities.find(function (city) 
-            {
-                return city.key === placeOfBirth;
-            });
+            var entityBubble = groupedEntities.find(function (city) {
+            return city.key === placeOfBirth;
+        });
     
             if (entityBubble) 
             {
@@ -447,5 +446,3 @@
 
     
 })();
-
-
