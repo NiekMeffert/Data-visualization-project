@@ -16,7 +16,7 @@
 body {
     margin: 0;
     overflow: hidden;
-    background-image: url('backgroundtest-01-01.jpg');
+    background: #2f4c65a8;
     font-family: 'Roboto', sans-serif;
     
 }
