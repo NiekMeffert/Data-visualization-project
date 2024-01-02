@@ -20,6 +20,7 @@
     var showLines = true; 
     var selectedEntity = null; 
 
+    
     // var initialCenter = [47.1625, 19.5033];  // Set your desired initial center coordinates
 
     // All the files I need to call
@@ -27,7 +28,7 @@
         .defer(d3.json, "world.topojson")
         .defer(d3.csv, "geo_no_camps.csv")
         .defer(d3.json, "birth_count.json")
-        .defer(d3.csv, "SS_Camps_Definitive.csv")
+        .defer(d3.csv, "Camp_location.csv")
         .defer(d3.json, "camp_count_new.json")
         .defer(d3.json, "clean_data2.json") 
         .await(ready);
@@ -59,6 +60,7 @@
             .enter().append("path")
             .attr("class", "country")
             .attr("d", path);
+            
 
         // Organizes the data in entities
         var groupedEntities = d3.nest()
@@ -74,6 +76,8 @@
             var count = entityCounts[city.key] || 0;
             city.entityCount = count;
         });
+
+        
 
         // Creates Circles for each city in groupedEntities
         var bubbles = svg.selectAll(".city-bubble")
@@ -108,13 +112,14 @@
         {
             selectedEntity = d;
         }
+        
         updateLines();
         showResidentsList(d);
     });
         // Append circle to each group
         bubbles.append("circle")
             .attr("r", function (d) {
-                return Math.sqrt(d.entityCount) * 0.5;
+                return Math.sqrt(d.entityCount) * 0.5 + 0.5;
             })
             .attr("class", "city-bubble")
             .attr("fill-opacity", 0.7)
@@ -165,7 +170,7 @@
             .enter().append("circle")
             .attr("r", function (d) 
             {
-                return d.campCount * 0.05;
+                return d.campCount * 0.05 + 1;
             })
             .attr("class", "new-city-bubble")
             .style("fill-opacity", 0.6)
@@ -278,10 +283,56 @@
                     if (!isSelected) 
                     {
                         d3.select(this).classed("selected", true).style("font-weight", "bold");
-                        displayTextContent(testimonyID);
+                        displayTextContent(testimonyID, city);
+                        drawLinesForTestimonyID(testimonyID, city);
                     }
+
+                    
+
+                    
                 });
         }
+
+        function drawLinesForTestimonyID(testimonyID, city) {
+            svg.selectAll(".connection-line").remove();
+        
+            var coordinates = getCoordinatesForTestimonyID(testimonyID, city, groupedEntities, groupedNewEntities);
+            drawLines(coordinates);
+        }
+        
+        function getCoordinatesForTestimonyID(testimonyID, city, entities, newEntities) {
+            var coordinates = [];
+        
+            entities.forEach(function (entity) {
+                if (entity !== city && entity.testimonyIDs) {
+                    var matchingTestimony = entity.testimonyIDs.find(function (item) {
+                        return item.id === testimonyID.id;
+                    });
+        
+                    if (matchingTestimony) {
+                        coordinates.push(projection([city.values[0].geometry_coordinates_long, city.values[0].geometry_coordinates_lat]));
+                        coordinates.push(projection([entity.values[0].LONG, entity.values[0].LAT]));
+                    }
+                }
+            });
+        
+            newEntities.forEach(function (newEntity) {
+                if (newEntity !== city && newEntity.testimonyIDs) {
+                    var matchingTestimony = newEntity.testimonyIDs.find(function (item) {
+                        return item.id === testimonyID.id;
+                    });
+        
+                    if (matchingTestimony) {
+                        coordinates.push(projection([city.values[0].geometry_coordinates_long, city.values[0].geometry_coordinates_lat]));
+                        coordinates.push(projection([newEntity.values[0].LONG, newEntity.values[0].LAT]));
+                    }
+                }
+            });
+        
+            return coordinates;
+        }
+        
+        
         //List that shows the testimonies, when clicking on a item in the resident list
         function displayTextContent(testimonyID) 
         {
@@ -328,16 +379,15 @@
                 svg.selectAll(".connection-line").style("display", showLines ? "initial" : "none");
             });
 
-            function updateLines() 
-            {
+            function updateLines() {
                 svg.selectAll(".connection-line").remove();
-        
-                if (selectedEntity && showLines) 
-                {
+            
+                if (selectedEntity && showLines) {
                     var coordinates = getBubbleCoordinates(selectedEntity);
                     drawLines(coordinates);
                 }
             }
+            
 
             function getBubbleCoordinates(bubble) 
             {
@@ -365,23 +415,33 @@
                 return coordinates;
             }
             //Draws the lines between the entities based on if the ID is availble in each entity
-        function drawLines(coordinates) 
-        {
-            var line = d3.line()
-                .x(function (d) { return d[0]; })
-                .y(function (d) { return d[1]; })
-                .curve(d3.curveCatmullRomClosed);
-        
-            svg.append("path")
-                .datum(coordinates)
-                .attr("class", "connection-line")
-                .attr("d", line)
-                .style("stroke", "#4c4542")
-                .style("stroke-width", 0.3)
-                .style("fill", "none")
-                .style("stroke-dasharray", "none")
-                .attr("transform", d3.zoomTransform(svg.node())); // Apply the current zoom transformation
-        }
+            function drawLines(coordinates) {
+                var line = d3.line()
+                    .x(function (d) { return d[0]; })
+                    .y(function (d) { return d[1]; })
+                    .curve(d3.curveCatmullRomClosed);
+            
+                // Create a path for each set of coordinates
+                var paths = svg.selectAll(".connection-line")
+                    .data([coordinates])
+                    .enter()
+                    .append("path")
+                    .attr("class", "connection-line")
+                    .style("stroke", "#4c4542")
+                    .style("stroke-width", 0.3)
+                    .style("fill", "none")
+                    .style("opacity", 0)  // Set initial opacity to 0
+                    .attr("transform", d3.zoomTransform(svg.node()));
+            
+                // Transition the opacity to 1 and the path to its final shape for each path
+                paths.transition()
+                    .duration(1000) // Set the duration of the transition
+                    .ease(d3.easeLinear)
+                    .style("opacity", 1)
+                    .attr("d", line);  // Set the final path data
+            }
+ 
+            
     }
     
     
@@ -400,6 +460,7 @@
     {
     svg.selectAll("path, circle, rect, text, .connection-line, connection-line, path, image")
         .attr("transform", d3.event.transform);
+        
 
     updateLines();
     }
@@ -409,38 +470,35 @@
     // and associates the testimony ID with the corresponding city or new city bubble.
     function associateDataWithBubbles(testimonyData, groupedEntities, groupedNewEntities) {
         testimonyData.data.forEach(function (record) {
-
             var placeOfBirth = record[3];
             var testimonyID = record[1];
             var name = record[0]; // Assuming the "Name" column is at index 0
-            var camps = record[8];
-            
+            var campsData = record[8];
+            var camps = Array.isArray(campsData) ? campsData : [campsData];
     
             var entityBubble = groupedEntities.find(function (city) {
-            return city.key === placeOfBirth;
-        });
+                return city.key === placeOfBirth;
+            });
     
-            if (entityBubble) 
-            {
-                if (!entityBubble.testimonyIDs) 
-                {
+            if (entityBubble) {
+                if (!entityBubble.testimonyIDs) {
                     entityBubble.testimonyIDs = [];
                 }
                 entityBubble.testimonyIDs.push({ name: name, id: testimonyID });
             }
     
-            var newEntityBubble = groupedNewEntities.find(function (city) {
-                return city.key === camps;
-            });
+            camps.forEach(function (camp) {
+                var newEntityBubble = groupedNewEntities.find(function (city) {
+                    return city.key === camp;
+                });
     
-            if (newEntityBubble) 
-            {
-                if (!newEntityBubble.testimonyIDs) 
-                {
-                    newEntityBubble.testimonyIDs = [];
+                if (newEntityBubble) {
+                    if (!newEntityBubble.testimonyIDs) {
+                        newEntityBubble.testimonyIDs = [];
+                    }
+                    newEntityBubble.testimonyIDs.push({ name: name, id: testimonyID });
                 }
-                newEntityBubble.testimonyIDs.push({ name: name, id: testimonyID });
-            }
+            });
         });
     }
 
