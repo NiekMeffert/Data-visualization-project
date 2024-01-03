@@ -1,27 +1,24 @@
 
-@font-face {
+@font-face 
+{
     font-family: 'Roboto';
     src: url('Roboto/Roboto-Medium.ttf') format('truetype'); /* TTF format */
-  }
-  
-  
-
+}
 *
 {
     font-family: "roboto";
 }
 
-
-
-body {
+body 
+{
     margin: 0;
     overflow: hidden;
     background: #2f4c65a8;
     font-family: 'Roboto', sans-serif;
-    
 }
 
-#topBar {
+#topBar 
+{
     background-color: #d8cac5; /* Set the background color */
     color: #433731; /* Set the text color */
     padding: 0.3%; /* Add padding to the top and bottom */
@@ -38,15 +35,35 @@ body {
 
 svg 
 {
-   
     position: absolute;
-    
     margin: 10px;
     border-radius: 5px;
     width: 66.5%; /* Adjust the percentage based on your design */
     height: 90%; /* Adjust the viewport height based on your design */
-    top: 6%;
-   
+    top: 6%;   
+}
+
+#my_dataviz
+{   
+    position: fixed;
+    width: 60%; /* Adjust the percentage based on your design */
+    height: 35%; /* Adjust the viewport height based on your design */
+    top: 67%;
+    z-index: 5;
+    left: 67%;   
+}
+
+#WordcloudBG 
+{
+    position: absolute;
+    top: 69%;
+    right: 0.5%;
+    width: 30.7%; /* Adjust the percentage based on your design */
+    height: 26%;
+    background-color: #d8cac5;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1;   
 }
 
 .country
@@ -68,9 +85,7 @@ svg
     fill: #7c7c7c;
 }
 
-
 .city-bubble-group
-
 {
     font-size: 60px; 
     font-weight: bold;
@@ -86,10 +101,8 @@ svg
     top: 210px;
 }
 
-
 .tooltip 
 {
-
     background-color: #d8cac5d0;
     border: 1px solid #433731;
     border-radius: 5px;
@@ -99,8 +112,7 @@ svg
     top: 10%;
     position: absolute;
     padding: 5px;
-    left: 1%;
-    
+    left: 1%;  
 }
 
 .button
@@ -119,31 +131,26 @@ svg
 #toggleButton
 {
     top: 20%;
-    left: 0%;
-    
+    left: 0%;    
 }
 
 #togglecampsButton
 {
     top: 24.2%;
-    left: 0%;
-    
-    
-    
+    left: 0%;   
 }
 
 #toggleLinesButton
 {
     top: 28.4%;
-    left: 0%;
-    
+    left: 0%;   
 }
 
 .legend
 {
     position: absolute;
     top: 68%;
-    right: 60%;
+    right: 55%;
     width: 9%; /* Adjust the percentage based on your design */
     height: auto;
     background-color: #d8cac5d8;
@@ -152,16 +159,16 @@ svg
     border-radius: 5px;
     z-index: 1;
     text-align: left;
-    font-weight: 600;
-    
-    
+    font-weight: 600;   
 }
 
-#legend .fa-circle.blue {
+#legend .fa-circle.blue 
+{
     color:#255d69c4
 }
 
-#legend .fa-circle.green {
+#legend .fa-circle.green 
+{
     color:#aa4639b8
 }
 
@@ -172,30 +179,31 @@ svg
     right: 0.5%;
     width: 9.7%; /* Adjust the percentage based on your design */
     height: auto;
+    max-height: 58%;
     background-color: #d8cac5;
-    padding: 10px;
-    
+    padding: 10px;  
     border-radius: 5px;
-    z-index: 1;
-    
+    z-index: 1;   
 }
 
-    
-    /* Style the scrollbar track */
-    #residents-list ::-webkit-scrollbar {
+/* Style the scrollbar track */
+#residents-list ::-webkit-scrollbar 
+{
     width: 12px;
-    }
+}
     
-    /* Style the scrollbar thumb */
-    #residents-list ::-webkit-scrollbar-thumb {
+/* Style the scrollbar thumb */
+#residents-list ::-webkit-scrollbar-thumb 
+{
     background-color: #4c4542; /* Color of the scrollbar thumb */
     border-radius: 6px;
-    }
+}
     
-    /* Style the scrollbar track */
-    #residents-list ::-webkit-scrollbar-track {
+/* Style the scrollbar track */
+#residents-list ::-webkit-scrollbar-track 
+{
     background-color: #d8cac5; /* Color of the scrollbar track */
-    }
+}
 
 #text-content-container
 {
@@ -206,41 +214,46 @@ svg
     height: auto;
     background-color: #d8cac5;
     padding: 10px;
-    
     border-radius: 5px;
     z-index: 1;
-    max-height: 88.5%;  /* Set a fixed height */
+    max-height: 58%;  /* Set a fixed height */
     overflow-y: auto;   /* Enable vertical scrolling */
-    text-align: left;
-    
+    text-align: left;  
 }
 
-#text-content-container {
-    max-height: 88.5%;  /* Set a fixed height */
+#text-content-container 
+{
+    max-height: 58%;  /* Set a fixed height */
     overflow-y: auto;   /* Enable vertical scrolling */
-    }
+    border-radius: 5px;
+}
     
-    /* Style the scrollbar track */
-    #text-content-container::-webkit-scrollbar {
+/* Style the scrollbar track */
+#text-content-container::-webkit-scrollbar 
+{
     width: 12px;
-    }
+    border-radius: 5px;
+}
     
-    /* Style the scrollbar thumb */
-    #text-content-container::-webkit-scrollbar-thumb {
+/* Style the scrollbar thumb */
+#text-content-container::-webkit-scrollbar-thumb 
+{
     background-color: #4c4542; /* Color of the scrollbar thumb */
     border-radius: 6px;
-    }
+}
     
-    /* Style the scrollbar track */
-    #text-content-container::-webkit-scrollbar-track {
+/* Style the scrollbar track */
+#text-content-container::-webkit-scrollbar-track 
+{
     background-color: #d8cac5; /* Color of the scrollbar track */
-    }
+    border-radius: 5px;
+}
 
 #residents-list ul 
 {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0;    
 }
 
 #residents-list li 
@@ -249,53 +262,54 @@ svg
     font-size: 14px;
     padding: 0;
     margin: 0;
-
     text-align: left;
     overflow-y: auto;   /* Enable vertical scrolling */
 }
 
-#residents-list li   {
+#residents-list li   
+{
     max-height: 550px;  /* Set a fixed height */
     overflow-y: auto;   /* Enable vertical scrolling */
-    }
+}
     
-    /* Style the scrollbar track */
-    #residents-list li  ::-webkit-scrollbar {
+/* Style the scrollbar track */
+#residents-list li  ::-webkit-scrollbar 
+{
     width: 12px;
-    }
+}
     
-    /* Style the scrollbar thumb */
-    #residents-list li  ::-webkit-scrollbar-thumb {
+/* Style the scrollbar thumb */
+#residents-list li  ::-webkit-scrollbar-thumb 
+{
     background-color: #4c4542; /* Color of the scrollbar thumb */
     border-radius: 6px;
-    }
+}
     
-    /* Style the scrollbar track */
-    #residents-list li  ::-webkit-scrollbar-track {
+/* Style the scrollbar track */
+#residents-list li  ::-webkit-scrollbar-track 
+{
     background-color: #d8cac5; /* Color of the scrollbar track */
-    }
-
-
+}
 
 .list-group-item
 {
-    fill: #7c7c7c;
+    fill: #7c7c7c;   
 }
 
 /* Overlay styles */
-.overlay {
+.overlay 
+{
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
-    z-index: 2;
+    z-index: 9;
 }
 
-
-
-.close-button{
+.close-button
+{
     position: fixed;
     top: 50%;
     left: 50%;
@@ -304,27 +318,27 @@ svg
     border: 1px solid #433731;
     border-radius: 2px;
     padding: 20px;
-    z-index: 3;
+    z-index: 10;
     border-radius: 5px;
     font-weight: bold;
     font-size: large;
     opacity: 0;
-    transition: opacity 5s ease-in-out; /* You can adjust the duration here */
-    
+    transition: opacity 5s ease-in-out; /* You can adjust the duration here */    
 }
 
-.fade-in {
-    opacity: 1;
-    
+.fade-in 
+{
+    opacity: 1;   
 }
    
-
-.highlight {
+.highlight 
+{
     background-color: yellow;
     font-weight: bold;
 }
 
-.highlight-new {
+.highlight-new 
+{
     background-color: lightblue;
     font-weight: bold;
 }

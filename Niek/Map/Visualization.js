@@ -13,14 +13,11 @@
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
-
     // Variable that helps with toggling icons    
     var showBubbles = true;
     var showLines = true; 
     var selectedEntity = null; 
-
-    
+   
     // var initialCenter = [47.1625, 19.5033];  // Set your desired initial center coordinates
 
     // All the files I need to call
@@ -76,8 +73,6 @@
             var count = entityCounts[city.key] || 0;
             city.entityCount = count;
         });
-
-        
 
         // Creates Circles for each city in groupedEntities
         var bubbles = svg.selectAll(".city-bubble")
@@ -285,11 +280,7 @@
                         d3.select(this).classed("selected", true).style("font-weight", "bold");
                         displayTextContent(testimonyID, city);
                         drawLinesForTestimonyID(testimonyID, city);
-                    }
-
-                    
-
-                    
+                    }            
                 });
         }
 
@@ -331,8 +322,7 @@
         
             return coordinates;
         }
-        
-        
+           
         //List that shows the testimonies, when clicking on a item in the resident list
         function displayTextContent(testimonyID) 
         {
@@ -388,7 +378,6 @@
                 }
             }
             
-
             function getBubbleCoordinates(bubble) 
             {
                 var coordinates = [];
@@ -439,13 +428,9 @@
                     .ease(d3.easeLinear)
                     .style("opacity", 1)
                     .attr("d", line);  // Set the final path data
-            }
- 
-            
+            }          
     }
-    
-    
-
+      
     // Zooms in on the map
     var zoom = d3.zoom()
     .scaleExtent([1, 30])
@@ -460,15 +445,13 @@
     {
     svg.selectAll("path, circle, rect, text, .connection-line, connection-line, path, image")
         .attr("transform", d3.event.transform);
-        
 
     updateLines();
     }
-
-
     // this function iterates through each record in the testimonyData 
     // and associates the testimony ID with the corresponding city or new city bubble.
-    function associateDataWithBubbles(testimonyData, groupedEntities, groupedNewEntities) {
+    function associateDataWithBubbles(testimonyData, groupedEntities, groupedNewEntities) 
+    {
         testimonyData.data.forEach(function (record) {
             var placeOfBirth = record[3];
             var testimonyID = record[1];
@@ -500,7 +483,5 @@
                 }
             });
         });
-    }
-
-    
+    }    
 })();
