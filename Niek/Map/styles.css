@@ -51,20 +51,25 @@ svg
     top: 67%;
     z-index: 5;
     left: 67%;   
+    background-color: #d8cac5;
+    
+    border-radius: 5px;
+    margin-left: 7.6px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 30px;
 }
 
-#WordcloudBG 
-{
-    position: absolute;
-    top: 69%;
-    right: 0.5%;
-    width: 30.7%; /* Adjust the percentage based on your design */
-    height: 26%;
-    background-color: #d8cac5;
-    padding: 10px;
-    border-radius: 5px;
-    z-index: 1;   
-}
+#my_dataviz:hover {
+    transform: scale(2);
+    top: 50%;
+    left: 50%;  
+    border: 1px solid #433731;
+  }
+
+
+
+
 
 .country
 {
@@ -91,6 +96,16 @@ svg
     font-weight: bold;
     fill: #255C69;
     top: 210px;
+    
+}
+
+.city-bubble-group:hover
+{
+    font-size: 60px; 
+    font-weight: bold;
+    fill: #3d97ab;
+    top: 210px;
+    
 }
 
 .new-city-bubble
@@ -98,6 +113,14 @@ svg
     font-size: 60px; 
     font-weight: bold;
     fill: #AA4639;
+    top: 210px;
+}
+
+.new-city-bubble:hover
+{
+    font-size: 60px; 
+    font-weight: bold;
+    fill: #dd5e4e;
     top: 210px;
 }
 
@@ -184,6 +207,7 @@ svg
     padding: 10px;  
     border-radius: 5px;
     z-index: 1;   
+      /* Enable vertical scrolling */
 }
 
 /* Style the scrollbar track */
@@ -254,6 +278,8 @@ svg
     list-style: none;
     padding: 0;
     margin: 0;    
+    height: auto;
+    max-height: 58%;
 }
 
 #residents-list li 
@@ -261,39 +287,46 @@ svg
     margin-bottom: 5px;
     font-size: 14px;
     padding: 0;
+    height: auto;
+    max-height: 58%;
     margin: 0;
     text-align: left;
-    overflow-y: auto;   /* Enable vertical scrolling */
+    ;   /* Enable vertical scrolling */
 }
 
-#residents-list li   
+#residents-list 
 {
-    max-height: 550px;  /* Set a fixed height */
+    max-height: 58%;  /* Set a fixed height */
     overflow-y: auto;   /* Enable vertical scrolling */
+    border-radius: 5px;
 }
     
 /* Style the scrollbar track */
-#residents-list li  ::-webkit-scrollbar 
+#residents-list::-webkit-scrollbar 
 {
     width: 12px;
+    border-radius: 5px;
 }
     
 /* Style the scrollbar thumb */
-#residents-list li  ::-webkit-scrollbar-thumb 
+#residents-list::-webkit-scrollbar-thumb 
 {
     background-color: #4c4542; /* Color of the scrollbar thumb */
     border-radius: 6px;
 }
     
 /* Style the scrollbar track */
-#residents-list li  ::-webkit-scrollbar-track 
+#residents-list::-webkit-scrollbar-track 
 {
     background-color: #d8cac5; /* Color of the scrollbar track */
+    border-radius: 5px;
 }
 
 .list-group-item
 {
     fill: #7c7c7c;   
+    height: auto;
+    max-height: 58%;
 }
 
 /* Overlay styles */

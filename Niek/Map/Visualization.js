@@ -102,7 +102,9 @@
     {
         if (selectedEntity === d) 
         {
+            
             selectedEntity = null;
+            
         } else 
         {
             selectedEntity = d;
@@ -169,7 +171,6 @@
             })
             .attr("class", "new-city-bubble")
             .style("fill-opacity", 0.6)
-            .style("fill", "#AA4639")
             .on('mouseover', function (d) 
             {
                 d3.select(this).classed("selected", true);
@@ -242,7 +243,6 @@
             
         //Is the resident list that stores the Names and testimony ID for each enitity
         function showResidentsList(city) {
-            
             residentsList.selectAll("li").remove();
         
             var testimonyItems = residentsList
@@ -254,33 +254,28 @@
                 .data(city.testimonyIDs || [])
                 .enter().append("li")
                 .attr("class", "list-group-item testimony-id-item")
-                .text(function (d) 
-                { 
-                    return d.name + ", Testimony ID: " + d.id; 
+                .html(function (d) {
+                    // Display name, testimony ID, and occupation
+                    return '<span style="font-weight: bold;">' + d.name + '</span>, Testimony ID: ' + d.id + ', Occupation: ' + d.occupation;
                 })
-                .on('mouseover', function () 
-                {
+                .on('mouseover', function () {
                     d3.select(this).style("font-weight", "bold");
                 })
-                .on('mouseout', function () 
-                {
-                    if (!d3.select(this).classed("selected")) 
-                    {
+                .on('mouseout', function () {
+                    if (!d3.select(this).classed("selected")) {
                         d3.select(this).style("font-weight", "normal");
                     }
                 })
-                .on('click', function (testimonyID) 
-                {
+                .on('click', function (testimonyID) {
                     var isSelected = d3.select(this).classed("selected");
         
                     residentsList.selectAll(".testimony-id-item").style("font-weight", "normal").classed("selected", false);
         
-                    if (!isSelected) 
-                    {
+                    if (!isSelected) {
                         d3.select(this).classed("selected", true).style("font-weight", "bold");
                         displayTextContent(testimonyID, city);
                         drawLinesForTestimonyID(testimonyID, city);
-                    }            
+                    }
                 });
         }
 
@@ -341,6 +336,7 @@
                         '<div id="text-content-list">' +
                         '<strong>Name:</strong> ' + testimonyID.name + '<br>' +
                         '<strong>ID:</strong> ' + testimonyID.id + '<br>' +
+                        '<strong>Occupation:</strong> ' + testimonyID.occupation + '<br>' +
                         '<strong>Testimony:</strong><br>' + textContent +
                         '</div>');
             });
@@ -450,11 +446,11 @@
     }
     // this function iterates through each record in the testimonyData 
     // and associates the testimony ID with the corresponding city or new city bubble.
-    function associateDataWithBubbles(testimonyData, groupedEntities, groupedNewEntities) 
-    {
+    function associateDataWithBubbles(testimonyData, groupedEntities, groupedNewEntities) {
         testimonyData.data.forEach(function (record) {
             var placeOfBirth = record[3];
             var testimonyID = record[1];
+            var occupation = record[6]; // Assuming the "Occupation" column is at index 6
             var name = record[0]; // Assuming the "Name" column is at index 0
             var campsData = record[8];
             var camps = Array.isArray(campsData) ? campsData : [campsData];
@@ -467,7 +463,7 @@
                 if (!entityBubble.testimonyIDs) {
                     entityBubble.testimonyIDs = [];
                 }
-                entityBubble.testimonyIDs.push({ name: name, id: testimonyID });
+                entityBubble.testimonyIDs.push({ name: name, id: testimonyID, occupation: occupation });
             }
     
             camps.forEach(function (camp) {
@@ -479,9 +475,9 @@
                     if (!newEntityBubble.testimonyIDs) {
                         newEntityBubble.testimonyIDs = [];
                     }
-                    newEntityBubble.testimonyIDs.push({ name: name, id: testimonyID });
+                    newEntityBubble.testimonyIDs.push({ name: name, id: testimonyID, occupation: occupation });
                 }
             });
         });
-    }    
+    }
 })();
