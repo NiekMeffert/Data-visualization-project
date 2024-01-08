@@ -33,7 +33,7 @@ body
     
 }
 
-svg 
+svg
 {
     position: absolute;
     margin: 10px;
@@ -46,9 +46,9 @@ svg
 #my_dataviz
 {   
     position: fixed;
-    width: 60%; /* Adjust the percentage based on your design */
+    width: 55%; /* Adjust the percentage based on your design */
     height: 35%; /* Adjust the viewport height based on your design */
-    top: 67%;
+    top:65%;
     z-index: 5;
     left: 67%;   
     background-color: #d8cac5;
@@ -62,12 +62,17 @@ svg
 
 #my_dataviz:hover {
     transform: scale(2);
+    
     top: 50%;
     left: 50%;  
     border: 1px solid #433731;
   }
 
-
+#Wordcloud
+{
+width: 100%;
+height: 100%;
+}
 
 
 
@@ -240,14 +245,14 @@ svg
     padding: 10px;
     border-radius: 5px;
     z-index: 1;
-    max-height: 58%;  /* Set a fixed height */
+    max-height: 56%;  /* Set a fixed height */
     overflow-y: auto;   /* Enable vertical scrolling */
     text-align: left;  
 }
 
 #text-content-container 
 {
-    max-height: 58%;  /* Set a fixed height */
+    max-height: 56%;  /* Set a fixed height */
     overflow-y: auto;   /* Enable vertical scrolling */
     border-radius: 5px;
 }
@@ -279,7 +284,7 @@ svg
     padding: 0;
     margin: 0;    
     height: auto;
-    max-height: 58%;
+    max-height: 56%;
 }
 
 #residents-list li 
@@ -288,7 +293,7 @@ svg
     font-size: 14px;
     padding: 0;
     height: auto;
-    max-height: 58%;
+    max-height: 56%;
     margin: 0;
     text-align: left;
     ;   /* Enable vertical scrolling */
@@ -296,7 +301,7 @@ svg
 
 #residents-list 
 {
-    max-height: 58%;  /* Set a fixed height */
+    max-height: 56%;  /* Set a fixed height */
     overflow-y: auto;   /* Enable vertical scrolling */
     border-radius: 5px;
 }
@@ -326,7 +331,7 @@ svg
 {
     fill: #7c7c7c;   
     height: auto;
-    max-height: 58%;
+    max-height: 56%;
 }
 
 /* Overlay styles */

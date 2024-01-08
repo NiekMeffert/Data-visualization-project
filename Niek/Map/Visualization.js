@@ -1,5 +1,6 @@
 (function () 
 {
+    
     // Defines the map's size
     var margin = { top: 100, left: 100, right: 100, bottom: 100 },
         height = 1000 - margin.top - margin.bottom,
@@ -17,8 +18,10 @@
     var showBubbles = true;
     var showLines = true; 
     var selectedEntity = null; 
+    
+    
    
-    // var initialCenter = [47.1625, 19.5033];  // Set your desired initial center coordinates
+   
 
     // All the files I need to call
     d3.queue()
@@ -30,11 +33,12 @@
         .defer(d3.json, "clean_data2.json") 
         .await(ready);
 
+        var initialCenter = [18.640019, 47.299771];
         // Defines what kind of world map we use    
         var projection = d3.geoMercator()
         .translate([width / 2, height / 2])
         .scale(500)
-        //.center(initialCenter);
+        .center(initialCenter);
 
     var path = d3.geoPath()
         .projection(projection);
@@ -256,7 +260,7 @@
                 .attr("class", "list-group-item testimony-id-item")
                 .html(function (d) {
                     // Display name, testimony ID, and occupation
-                    return '<span style="font-weight: bold;">' + d.name + '</span>, Testimony ID: ' + d.id + ', Occupation: ' + d.occupation;
+                    return '<span style="font-weight: bold;">' + d.name + '<br>' + '</span> Testimony ID: ' + d.id + '<br>' + 'Occupation: ' + d.occupation;
                 })
                 .on('mouseover', function () {
                     d3.select(this).style("font-weight", "bold");
@@ -273,50 +277,51 @@
         
                     if (!isSelected) {
                         d3.select(this).classed("selected", true).style("font-weight", "bold");
-                        displayTextContent(testimonyID, city);
                         drawLinesForTestimonyID(testimonyID, city);
+                        displayTextContent(testimonyID);
                     }
                 });
         }
 
-        function drawLinesForTestimonyID(testimonyID, city) {
-            svg.selectAll(".connection-line").remove();
-        
-            var coordinates = getCoordinatesForTestimonyID(testimonyID, city, groupedEntities, groupedNewEntities);
-            drawLines(coordinates);
-        }
-        
         function getCoordinatesForTestimonyID(testimonyID, city, entities, newEntities) {
             var coordinates = [];
         
             entities.forEach(function (entity) {
-                if (entity !== city && entity.testimonyIDs) {
-                    var matchingTestimony = entity.testimonyIDs.find(function (item) {
+                if (entity.testimonyIDs) {
+                    var matchingTestimonies = entity.testimonyIDs.filter(function (item) {
                         return item.id === testimonyID.id;
                     });
         
-                    if (matchingTestimony) {
+                    matchingTestimonies.forEach(function (matchingTestimony) {
                         coordinates.push(projection([city.values[0].geometry_coordinates_long, city.values[0].geometry_coordinates_lat]));
-                        coordinates.push(projection([entity.values[0].LONG, entity.values[0].LAT]));
-                    }
+                        coordinates.push(projection([entity.values[0].geometry_coordinates_long, entity.values[0].geometry_coordinates_lat]));
+                    });
                 }
             });
         
-            newEntities.forEach(function (newEntity) {
-                if (newEntity !== city && newEntity.testimonyIDs) {
-                    var matchingTestimony = newEntity.testimonyIDs.find(function (item) {
+            // Only consider newEntities that share the same camp as the selected city
+            var selectedCamp = city.key;
+            var newEntitiesInCamp = newEntities.filter(function (newEntity) {
+                return newEntity.key === selectedCamp && newEntity.testimonyIDs;
+            });
+        
+            newEntitiesInCamp.forEach(function (newEntity) {
+                if (newEntity.testimonyIDs) {
+                    var matchingTestimonies = newEntity.testimonyIDs.filter(function (item) {
                         return item.id === testimonyID.id;
                     });
         
-                    if (matchingTestimony) {
+                    matchingTestimonies.forEach(function (matchingTestimony) {
                         coordinates.push(projection([city.values[0].geometry_coordinates_long, city.values[0].geometry_coordinates_lat]));
                         coordinates.push(projection([newEntity.values[0].LONG, newEntity.values[0].LAT]));
-                    }
+                    });
                 }
             });
         
             return coordinates;
         }
+        
+        
            
         //List that shows the testimonies, when clicking on a item in the resident list
         function displayTextContent(testimonyID) 
@@ -368,30 +373,25 @@
             function updateLines() {
                 svg.selectAll(".connection-line").remove();
             
-                if (selectedEntity && showLines) {
+                if (showLines && selectedEntity) {
                     var coordinates = getBubbleCoordinates(selectedEntity);
                     drawLines(coordinates);
                 }
             }
             
-            function getBubbleCoordinates(bubble) 
-            {
+            function getBubbleCoordinates(bubble) {
                 var coordinates = [];
             
-                bubble.testimonyIDs.forEach(function (testimony) 
-                {
-                    var entity = groupedEntities.find(function (e) 
-                    {
+                bubble.testimonyIDs.forEach(function (testimony) {
+                    var entity = groupedEntities.find(function (e) {
                         return e.testimonyIDs && e.testimonyIDs.some(item => item.id === testimony.id);
                     });
             
-                    var newEntity = groupedNewEntities.find(function (ne) 
-                    {
+                    var newEntity = groupedNewEntities.find(function (ne) {
                         return ne.testimonyIDs && ne.testimonyIDs.some(item => item.id === testimony.id);
                     });
             
-                    if (entity && newEntity) 
-                    {
+                    if (entity && newEntity) {
                         coordinates.push(projection([entity.values[0].geometry_coordinates_long, entity.values[0].geometry_coordinates_lat]));
                         coordinates.push(projection([newEntity.values[0].LONG, newEntity.values[0].LAT]));
                     }
@@ -401,30 +401,58 @@
             }
             //Draws the lines between the entities based on if the ID is availble in each entity
             function drawLines(coordinates) {
-                var line = d3.line()
-                    .x(function (d) { return d[0]; })
-                    .y(function (d) { return d[1]; })
-                    .curve(d3.curveCatmullRomClosed);
+                // Remove existing lines
+                svg.selectAll(".connection-line").remove();
             
-                // Create a path for each set of coordinates
-                var paths = svg.selectAll(".connection-line")
-                    .data([coordinates])
-                    .enter()
-                    .append("path")
-                    .attr("class", "connection-line")
-                    .style("stroke", "#4c4542")
-                    .style("stroke-width", 0.3)
-                    .style("fill", "none")
-                    .style("opacity", 0)  // Set initial opacity to 0
-                    .attr("transform", d3.zoomTransform(svg.node()));
+                // Count the total number of connections
+                var connectionCount = coordinates.length / 2;
             
-                // Transition the opacity to 1 and the path to its final shape for each path
-                paths.transition()
-                    .duration(1000) // Set the duration of the transition
-                    .ease(d3.easeLinear)
-                    .style("opacity", 1)
-                    .attr("d", line);  // Set the final path data
-            }          
+                // Define a scale for line thickness based on the total number of connections
+                var thicknessScale = d3.scaleLinear()
+                    .domain([1, Math.max(connectionCount, 0.05)]) // Ensure a minimum thickness of 2
+                    .range([0.05, 0.5]); // Adjust the range as needed
+            
+                // Create lines for each pair of coordinates
+                for (var i = 0; i < coordinates.length; i += 2) {
+                    var lineData = [coordinates[i], coordinates[i + 1]];
+            
+                    // Create a single path for each pair of coordinates
+                    var line = svg.append("path")
+                        .data([lineData])
+                        .attr("class", "connection-line")
+                        .style("stroke", "#4c4542")
+                        .style("stroke-width", thicknessScale(connectionCount))
+                        .style("fill", "none")
+                        .style("opacity", 0)  // Set initial opacity to 0
+                        .attr("transform", d3.zoomTransform(svg.node()));
+            
+                    // Transition the opacity to 1 and the path to its final shape
+                    line.transition()
+                        .duration(1000) // Set the duration of the transition
+                        .ease(d3.easeLinear)
+                        .style("opacity", 0.8)
+                        .attr("d", d3.line()
+                            .x(function (d) { return d[0]; })
+                            .y(function (d) { return d[1]; })
+                        );  // Set the final path data
+                }
+            }
+
+            function drawLinesForTestimonyID(testimonyID, city) {
+                // Hide all existing lines
+                svg.selectAll(".connection-line").style("display", "none");
+            
+                // Get coordinates for the selected testimony ID
+                var coordinates = getCoordinatesForTestimonyID(testimonyID, city, groupedEntities, groupedNewEntities);
+            
+                // Draw lines for each pair of matching coordinates
+                for (var i = 0; i < coordinates.length; i += 2) {
+                    var lineCoordinates = [coordinates[i], coordinates[i + 1]];
+                    drawLines(lineCoordinates);
+                }
+            }
+            
+               
     }
       
     // Zooms in on the map
@@ -435,14 +463,24 @@
     svg.call(zoom);
 
     // Apply the initial center without zoom
-    svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2 - projection(initialCenter)[0], height / 2 - projection(initialCenter)[1]));
+    //svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2 - projection(initialCenter)[0], height / 2 - projection(initialCenter)[1]));
 
-    function zoomed() 
-    {
-    svg.selectAll("path, circle, rect, text, .connection-line, connection-line, path, image")
-        .attr("transform", d3.event.transform);
-
-    updateLines();
+    function zoomed() {
+        svg.selectAll("path, circle, rect, text, .connection-line, connection-line, path, image")
+            .attr("transform", d3.event.transform);
+    
+        updateLines();
+    
+        // Make sure to adjust the mouse coordinates for correct interaction
+        svg.selectAll(".city-bubble-group")
+            .attr("transform", function (d) {
+                return "translate(" + projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat]) + ")";
+            });
+    
+        svg.selectAll(".new-city-bubble")
+            .attr("transform", function (d) {
+                return "translate(" + projection([d.values[0].LONG, d.values[0].LAT]) + ")";
+            });
     }
     // this function iterates through each record in the testimonyData 
     // and associates the testimony ID with the corresponding city or new city bubble.
@@ -450,10 +488,22 @@
         testimonyData.data.forEach(function (record) {
             var placeOfBirth = record[3];
             var testimonyID = record[1];
-            var occupation = record[6]; // Assuming the "Occupation" column is at index 6
+            var occupation = record[6];
             var name = record[0]; // Assuming the "Name" column is at index 0
             var campsData = record[8];
-            var camps = Array.isArray(campsData) ? campsData : [campsData];
+    
+            // Ensure campsData is an array
+            var camps = [];
+            if (campsData) {
+                if (Array.isArray(campsData)) {
+                    camps = campsData;
+                } else if (typeof campsData === 'string') {
+                    // Split the string into an array, assuming it's comma-separated
+                    camps = campsData.split(',').map(function (camp) {
+                        return camp.trim();
+                    });
+                }
+            }
     
             var entityBubble = groupedEntities.find(function (city) {
                 return city.key === placeOfBirth;
@@ -463,7 +513,11 @@
                 if (!entityBubble.testimonyIDs) {
                     entityBubble.testimonyIDs = [];
                 }
-                entityBubble.testimonyIDs.push({ name: name, id: testimonyID, occupation: occupation });
+    
+                // Check if the ID is not already associated with this entity
+                if (!entityBubble.testimonyIDs.some(item => item.id === testimonyID)) {
+                    entityBubble.testimonyIDs.push({ name: name, id: testimonyID, occupation: occupation });
+                }
             }
     
             camps.forEach(function (camp) {
@@ -475,7 +529,11 @@
                     if (!newEntityBubble.testimonyIDs) {
                         newEntityBubble.testimonyIDs = [];
                     }
-                    newEntityBubble.testimonyIDs.push({ name: name, id: testimonyID, occupation: occupation });
+    
+                    // Check if the ID is not already associated with this entity
+                    if (!newEntityBubble.testimonyIDs.some(item => item.id === testimonyID)) {
+                        newEntityBubble.testimonyIDs.push({ name: name, id: testimonyID });
+                    }
                 }
             });
         });

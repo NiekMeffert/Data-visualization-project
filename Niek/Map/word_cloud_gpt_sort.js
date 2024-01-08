@@ -16,14 +16,14 @@ async function fetchData()
 
     // MAKE WORD CLOUD
     // set the dimensions and margins of the graph
-    var margin = { top: 10, right: 10, bottom: 10, left: 10 },
-        width = 500 - margin.left - margin.right,
-        height = 200 - margin.top - margin.bottom;
+    var margin = { top: 5, right: 5, bottom: 5, left: 5 },
+        width = 800 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg2 = d3.select("#my_dataviz").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", "100%")
+        .attr("height", "100%")
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         
@@ -36,8 +36,10 @@ async function fetchData()
         {
             return { text: word, size: freqmap[word] };
         }))
-        .padding(4)
-        .fontSize(function (d) { return 0.5 * d.size; })
+        .padding(10)
+        
+        .rotate(function() { return ~~(Math.random() * 2) * 90; })
+        .fontSize(function (d) { return 0.5 * d.size + 10; })
         .on("end", draw);
 
     layout.start();
@@ -47,6 +49,7 @@ async function fetchData()
     {
         svg2.append("g")
             .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+            .attr("id", "Wordcloud")
             .selectAll("text")
             .data(freqmap)
             .enter().append("text")
