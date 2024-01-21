@@ -17,8 +17,8 @@ async function fetchData()
     // MAKE WORD CLOUD
     // set the dimensions and margins of the graph
     var margin = { top: 5, right: 5, bottom: 5, left: 5 },
-        width = 800 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        width = 500 - margin.left - margin.right,
+        height = 200 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg2 = d3.select("#my_dataviz").append("svg")
@@ -36,10 +36,10 @@ async function fetchData()
         {
             return { text: word, size: freqmap[word] };
         }))
-        .padding(10)
+        .padding(5)
         
         .rotate(function() { return ~~(Math.random() * 2) * 90; })
-        .fontSize(function (d) { return 0.5 * d.size + 10; })
+        .fontSize(function (d) { return 0.3 * d.size + 10; })
         .on("end", draw);
 
     layout.start();

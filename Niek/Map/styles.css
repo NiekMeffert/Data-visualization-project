@@ -177,7 +177,7 @@ height: 100%;
 .legend
 {
     position: absolute;
-    top: 68%;
+    top: 80%;
     right: 55%;
     width: 9%; /* Adjust the percentage based on your design */
     height: auto;

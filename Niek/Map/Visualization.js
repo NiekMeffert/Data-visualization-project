@@ -244,82 +244,84 @@
             var textContentDiv = d3.select("#residents-list")
             .append("div")
             .attr("id", "text-content")
-            
-        //Is the resident list that stores the Names and testimony ID for each enitity
-        function showResidentsList(city) {
-            residentsList.selectAll("li").remove();
-        
-            var testimonyItems = residentsList
-                .append("li")
-                .attr("class", "list-group-item")
-                .style("font-size", "25px")
-                .text(city.key + " ")
-                .selectAll("li.testimony-id-item")
-                .data(city.testimonyIDs || [])
-                .enter().append("li")
-                .attr("class", "list-group-item testimony-id-item")
-                .html(function (d) {
-                    // Display name, testimony ID, and occupation
-                    return '<span style="font-weight: bold;">' + d.name + '<br>' + '</span> Testimony ID: ' + d.id + '<br>' + 'Occupation: ' + d.occupation;
-                })
-                .on('mouseover', function () {
-                    d3.select(this).style("font-weight", "bold");
-                })
-                .on('mouseout', function () {
-                    if (!d3.select(this).classed("selected")) {
-                        d3.select(this).style("font-weight", "normal");
-                    }
-                })
-                .on('click', function (testimonyID) {
-                    var isSelected = d3.select(this).classed("selected");
-        
-                    residentsList.selectAll(".testimony-id-item").style("font-weight", "normal").classed("selected", false);
-        
-                    if (!isSelected) {
-                        d3.select(this).classed("selected", true).style("font-weight", "bold");
-                        drawLinesForTestimonyID(testimonyID, city);
-                        displayTextContent(testimonyID);
-                    }
-                });
-        }
 
-        function getCoordinatesForTestimonyID(testimonyID, city, entities, newEntities) {
-            var coordinates = [];
-        
-            entities.forEach(function (entity) {
-                if (entity.testimonyIDs) {
-                    var matchingTestimonies = entity.testimonyIDs.filter(function (item) {
-                        return item.id === testimonyID.id;
-                    });
-        
-                    matchingTestimonies.forEach(function (matchingTestimony) {
-                        coordinates.push(projection([city.values[0].geometry_coordinates_long, city.values[0].geometry_coordinates_lat]));
-                        coordinates.push(projection([entity.values[0].geometry_coordinates_long, entity.values[0].geometry_coordinates_lat]));
-                    });
-                }
+// Variable to store the selected testimony ID
+var selectedTestimonyID = null;
+
+// Function to display resident list
+function showResidentsList(city) {
+    residentsList.selectAll("li").remove();
+
+    var testimonyItems = residentsList
+        .append("li")
+        .attr("class", "list-group-item")
+        .style("font-size", "25px")
+        .text(city.key + " ")
+        .selectAll("li.testimony-id-item")
+        .data(city.testimonyIDs || [])
+        .enter().append("li")
+        .attr("class", "list-group-item testimony-id-item")
+        .html(function (d) {
+            // Display name, testimony ID, and occupation
+            return '<span style="font-weight: bold;">' + d.name + '<br>' + '</span> Testimony ID: ' + d.id + '<br>' + 'Occupation: ' + d.occupation;
+        })
+        .on('mouseover', function () {
+            d3.select(this).style("font-weight", "bold");
+        })
+        .on('mouseout', function () {
+            if (!d3.select(this).classed("selected")) {
+                d3.select(this).style("font-weight", "normal");
+            }
+        })
+        .on('click', function (testimonyID) {
+            var isSelected = d3.select(this).classed("selected");
+
+            residentsList.selectAll(".testimony-id-item").style("font-weight", "normal").classed("selected", false);
+
+            if (!isSelected) {
+                d3.select(this).classed("selected", true).style("font-weight", "bold");
+                drawLinesForTestimonyID(testimonyID, city);
+                fetchData(filterTestimonyIDsByEntity(city));
+                displayTextContent(testimonyID);
+            }
+        });
+}
+
+// Implement the logic to filter testimony IDs based on the selected entity
+function filterTestimonyIDsByEntity(entity) {
+    return entity.testimonyIDs.map(testimony => testimony.id);
+}
+function getCoordinatesForTestimonyID(testimonyID, city, entities, newEntities) {
+    var coordinates = [];
+
+    entities.forEach(function (entity) {
+        if (entity.testimonyIDs) {
+            var matchingTestimony = entity.testimonyIDs.find(function (item) {
+                return item.id === testimonyID.id;
             });
-        
-            // Only consider newEntities that share the same camp as the selected city
-            var selectedCamp = city.key;
-            var newEntitiesInCamp = newEntities.filter(function (newEntity) {
-                return newEntity.key === selectedCamp && newEntity.testimonyIDs;
-            });
-        
-            newEntitiesInCamp.forEach(function (newEntity) {
-                if (newEntity.testimonyIDs) {
-                    var matchingTestimonies = newEntity.testimonyIDs.filter(function (item) {
-                        return item.id === testimonyID.id;
-                    });
-        
-                    matchingTestimonies.forEach(function (matchingTestimony) {
-                        coordinates.push(projection([city.values[0].geometry_coordinates_long, city.values[0].geometry_coordinates_lat]));
-                        coordinates.push(projection([newEntity.values[0].LONG, newEntity.values[0].LAT]));
-                    });
-                }
-            });
-        
-            return coordinates;
+
+            if (matchingTestimony) {
+                coordinates.push(projection([city.values[0].geometry_coordinates_long, city.values[0].geometry_coordinates_lat]));
+                coordinates.push(projection([entity.values[0].geometry_coordinates_long, entity.values[0].geometry_coordinates_lat]));
+            }
         }
+    });
+
+    newEntities.forEach(function (newEntity) {
+        if (newEntity.testimonyIDs) {
+            var matchingTestimony = newEntity.testimonyIDs.find(function (item) {
+                return item.id === testimonyID.id;
+            });
+
+            if (matchingTestimony) {
+                coordinates.push(projection([city.values[0].geometry_coordinates_long, city.values[0].geometry_coordinates_lat]));
+                coordinates.push(projection([newEntity.values[0].LONG, newEntity.values[0].LAT]));
+            }
+        }
+    });
+
+    return coordinates;
+}
         
         
            
@@ -375,6 +377,9 @@
             
                 if (showLines && selectedEntity) {
                     var coordinates = getBubbleCoordinates(selectedEntity);
+                    drawLines(coordinates);
+                } else if (showLines && selectedTestimonyID) {
+                    var coordinates = getCoordinatesForTestimonyID(selectedTestimonyID, selectedEntity, groupedEntities, groupedNewEntities);
                     drawLines(coordinates);
                 }
             }
@@ -437,21 +442,13 @@
                         );  // Set the final path data
                 }
             }
-
             function drawLinesForTestimonyID(testimonyID, city) {
-                // Hide all existing lines
-                svg.selectAll(".connection-line").style("display", "none");
-            
-                // Get coordinates for the selected testimony ID
+                // Set the selectedTestimonyID when drawing lines for a specific testimony ID
+                selectedTestimonyID = testimonyID;
                 var coordinates = getCoordinatesForTestimonyID(testimonyID, city, groupedEntities, groupedNewEntities);
-            
-                // Draw lines for each pair of matching coordinates
-                for (var i = 0; i < coordinates.length; i += 2) {
-                    var lineCoordinates = [coordinates[i], coordinates[i + 1]];
-                    drawLines(lineCoordinates);
-                }
+                drawLines(coordinates);
             }
-            
+                
                
     }
       
@@ -471,17 +468,19 @@
     
         updateLines();
     
-        // Make sure to adjust the mouse coordinates for correct interaction
-        svg.selectAll(".city-bubble-group")
-            .attr("transform", function (d) {
-                return "translate(" + projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat]) + ")";
-            });
-    
-        svg.selectAll(".new-city-bubble")
-            .attr("transform", function (d) {
-                return "translate(" + projection([d.values[0].LONG, d.values[0].LAT]) + ")";
-            });
-    }
+         // Make sure to adjust the mouse coordinates for correct interaction
+    svg.selectAll(".city-bubble-group")
+    .attr("transform", function (d) {
+        return "translate(" + projection([d.values[0].geometry_coordinates_long, d.values[0].geometry_coordinates_lat]) + ")";
+    });
+
+svg.selectAll(".new-city-bubble")
+    .attr("transform", function (d) {
+        return "translate(" + projection([d.values[0].LONG, d.values[0].LAT]) + ")";
+    });
+
+updateLines(); // Call the updated updateLines function
+}
     // this function iterates through each record in the testimonyData 
     // and associates the testimony ID with the corresponding city or new city bubble.
     function associateDataWithBubbles(testimonyData, groupedEntities, groupedNewEntities) {
@@ -536,6 +535,74 @@
                     }
                 }
             });
+
+            
         });
     }
+
+    async function fetchData(testimonyIDs) {
+        const response = await fetch('word_counts1.json'); // Adjust the URL based on your data source
+        const jsonData = await response.json();
+    
+        // Combine word frequencies from all files
+        const freqmap = {};
+        Object.keys(jsonData.words).forEach(word => {
+            const wordData = jsonData.words[word];
+            freqmap[word] = wordData.count;
+        });
+    
+        // Sort the word frequencies in descending order
+        const sortedFreq = Object.keys(freqmap).sort((a, b) => freqmap[b] - freqmap[a]);
+    
+        // MAKE WORD CLOUD
+        // set the dimensions and margins of the graph
+        var margin = { top: 5, right: 5, bottom: 5, left: 5 },
+            width = 500 - margin.left - margin.right,
+            height = 200 - margin.top - margin.bottom;
+    
+        // append the svg object to the body of the page
+        var svg2 = d3.select("#my_dataviz").append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    
+        // Constructs a new cloud layout instance
+        var layout = d3.layout.cloud()
+            .size([width, height])
+            .words(sortedFreq.map(function (word) {
+                return { text: word, size: freqmap[word] };
+            }))
+            .padding(5)
+            .rotate(function () { return ~~(Math.random() * 2) * 90; })
+            .fontSize(function (d) { return 0.3 * d.size + 10; })
+            .on("end", draw);
+    
+        layout.start();
+    
+        // This function takes the output of 'layout' above and draws the words
+        function draw(freqmap) {
+            // Remove existing words
+            svg2.select("#Wordcloud").selectAll("text").remove();
+    
+            // Append the new words
+            svg2.append("g")
+                .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+                .attr("id", "Wordcloud")
+                .selectAll("text")
+                .data(freqmap)
+                .enter().append("text")
+                .style("font-size", function (d) { return d.size + "px"; })
+                .attr("text-anchor", "middle")
+                .attr("transform", function (d) {
+                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .text(function (d) { return d.text; });
+
+                svg2.select("#my_dataviz").selectAll("text").remove();
+        }
+    }
+
+    fetchData();
+
 })();
